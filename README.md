@@ -33,7 +33,8 @@ The bot requires two models, one for detecting the board "pose" and another for
 classifying each of the 64 squares within the board. This requires two Roboflow
 datasets and ML models to be trained.
 
-The camera should be facing the board from the top.
+The camera should be facing the board down from above, centered on the four
+middle central squares if possible.
 
 #### Training board pose estimation
 
@@ -63,7 +64,9 @@ WIP
 To create your own data set, run [
 `/src/train/gather_square_images.py`](src/train/gather_square_images.py), which
 uploads captured images to the configured "Chessbot Squares" dataset on
-Roboflow. (should be configured for single-label classification)
+Roboflow. (should be configured for single-label classification) It requires
+a fully-trained board pose estimation model so it can crop out the chess board
+and then divide it up into a 8x8 grid.
 
 ```bash
 python src/train/gather_square_images.py
