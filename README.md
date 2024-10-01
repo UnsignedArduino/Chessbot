@@ -29,11 +29,21 @@ on a monitor.
 
 ### Training
 
-To create your own data set, run [`/src/train/gather.py`](src/train/gather.py),
-which uploads captured images to a configured dataset on Roboflow.
+The bot requires two models, one for detecting the board "pose" and another for
+classifying each of the 64 squares within the board. This requires two Roboflow
+datasets and ML models to be trained.
+
+The camera should be facing the board from the top.
+
+#### Training board pose estimation
+
+To create your own data set, run [
+`/src/train/gather_board_images.py`](src/train/gather_board_images.py),
+which uploads captured images to the configured "Chessbot Boards" dataset on
+Roboflow. (should be configured for keypoint detection)
 
 ```bash
-python src/train/gather.py
+python src/train/gather_board_images.py
 ```
 
 If you are running the command over SSH, prepend `DISPLAY=:0` to the command.
@@ -45,3 +55,18 @@ To gather images:
       dataset.
     * To discard, click <kbd>n</kbd>.
 * Click <kbd>q</kbd> to quit.
+
+#### Training square classification
+
+WIP
+
+To create your own data set, run [
+`/src/train/gather_square_images.py`](src/train/gather_square_images.py), which
+uploads captured images to the configured "Chessbot Squares" dataset on
+Roboflow. (should be configured for single-label classification)
+
+```bash
+python src/train/gather_square_images.py
+```
+
+If you are running the command over SSH, prepend `DISPLAY=:0` to the command.
