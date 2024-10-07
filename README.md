@@ -36,7 +36,7 @@ datasets and ML models to be trained.
 The camera should be facing the board down from above, centered on the four
 middle central squares if possible.
 
-#### Training board pose estimation
+#### Training board segmentation
 
 To create your own data set, run [
 `/src/train/gather_board_images.py`](src/train/gather_board_images.py),
