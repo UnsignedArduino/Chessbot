@@ -47,7 +47,8 @@ Roboflow. (should be configured for segmentation)
 python src/train/gather_board_images.py
 ```
 
-If you are running the command over SSH, prepend `DISPLAY=:0` to the command.
+If you are running the command over SSH, prepend `DISPLAY=:0` to the command so
+the OpenCV window pops up on the main monitor.
 
 To gather images:
 
@@ -57,7 +58,10 @@ To gather images:
     * To discard, click <kbd>n</kbd>.
 * Click <kbd>q</kbd> to quit.
 
-To annotate, segment by the four corners of the chess board.
+To annotate, segment by the four corners of the chess board. You can use the
+smart polygon tool and remove all but the four corner points to help speed up
+annotations; model assisted labeling can also be used after a preliminary
+training.
 
 #### Training square classification
 
