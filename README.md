@@ -29,7 +29,7 @@ on a monitor.
 
 ### Training
 
-The bot requires two models, one for detecting the board "pose" and another for
+The bot requires two models, one for segmenting the board and another for
 classifying each of the 64 squares within the board. This requires two Roboflow
 datasets and ML models to be trained.
 
@@ -41,7 +41,7 @@ middle central squares if possible.
 To create your own data set, run [
 `/src/train/gather_board_images.py`](src/train/gather_board_images.py),
 which uploads captured images to the configured "Chessbot Boards" dataset on
-Roboflow. (should be configured for keypoint detection)
+Roboflow. (should be configured for segmentation)
 
 ```bash
 python src/train/gather_board_images.py
@@ -57,19 +57,8 @@ To gather images:
     * To discard, click <kbd>n</kbd>.
 * Click <kbd>q</kbd> to quit.
 
+To annotate, segment by the four corners of the chess board.
+
 #### Training square classification
 
 WIP
-
-To create your own data set, run [
-`/src/train/gather_square_images.py`](src/train/gather_square_images.py), which
-uploads captured images to the configured "Chessbot Squares" dataset on
-Roboflow. (should be configured for single-label classification) It requires
-a fully-trained board pose estimation model so it can crop out the chess board
-and then divide it up into a 8x8 grid.
-
-```bash
-python src/train/gather_square_images.py
-```
-
-If you are running the command over SSH, prepend `DISPLAY=:0` to the command.
