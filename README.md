@@ -27,42 +27,23 @@ on a monitor.
 6. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
    want to train it yourself. (You will need a Roboflow account)
 
-### Training
+### Model training
 
-The bot requires two models, one for segmenting the board and another for
-classifying each of the 64 squares within the board. This requires two Roboflow
+The bot requires two models, one for segmenting the board squares and another
+for classifying the pieces found on squares. This requires two Roboflow
 datasets and ML models to be trained.
 
 The camera should be facing the board down from above, centered on the four
-middle central squares if possible.
+middle central squares.
 
-#### Training board segmentation
+#### Training board square segmentation
 
-To create your own data set, run [
-`/src/train/gather_board_images.py`](src/train/gather_board_images.py),
-which uploads captured images to the configured "Chessbot Boards" dataset on
-Roboflow. (should be configured for segmentation)
+WIP
 
-```bash
-python src/train/gather_board_images.py
-```
+#### Training pieces classification
 
-If you are running the command over SSH, prepend `DISPLAY=:0` to the command so
-the OpenCV window pops up on the main monitor.
+WIP
 
-To gather images:
-
-* Click <kbd>c</kbd> to capture an image.
-    * To save, click <kbd>y</kbd>. This uploads it to the configured Roboflow
-      dataset.
-    * To discard, click <kbd>n</kbd>.
-* Click <kbd>q</kbd> to quit.
-
-To annotate, segment by the four corners of the chess board. You can use the
-smart polygon tool and remove all but the four corner points to help speed up
-annotations; model assisted labeling can also be used after a preliminary
-training.
-
-#### Training square classification
+## Usage
 
 WIP

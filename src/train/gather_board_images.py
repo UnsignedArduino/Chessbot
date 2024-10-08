@@ -11,9 +11,9 @@ load_dotenv()
 
 rf = Roboflow(api_key=os.getenv("ROBOFLOW_API_KEY"))
 workspaceId = os.getenv("ROBOFLOW_WORKSPACE_ID")
-projectId = os.getenv("ROBOFLOW_CHESSBOT_BOARDS_PROJECT_ID")
+projectId = os.getenv("ROBOFLOW_CHESSBOT_SQUARES_PROJECT_ID")
 print(f"Roboflow workspace ID: {workspaceId}")
-print(f"Roboflow Chessbot Boards project ID: {projectId}")
+print(f"Roboflow Chessbot Squares project ID: {projectId}")
 project = rf.workspace(workspaceId).project(projectId)
 
 cam = Picamera2()
