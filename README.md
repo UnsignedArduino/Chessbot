@@ -30,14 +30,14 @@ on a monitor.
 
 ### Model training
 
-The bot requires two models, one for segmenting the board squares and another
-for classifying the pieces found on occupied squares. This requires two
-Roboflow datasets and ML models to be trained.
+The bot requires two models, one for segmenting the board and another for
+classifying the pieces found on squares. This requires two Roboflow datasets
+and ML models to be trained.
 
 The camera should be facing the board down from above, centered on the four
 middle central squares.
 
-#### Training board square segmentation
+#### Training board segmentation
 
 WIP
 
