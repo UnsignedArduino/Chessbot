@@ -35,11 +35,19 @@ classifying the pieces found on squares. This requires two Roboflow datasets
 and ML models to be trained.
 
 The camera should be facing the board down from above, centered on the four
-middle central squares.
+middle central squares. See the board segmentation dataset to see the setup I
+used.
 
 #### Training board segmentation
 
-WIP
+[![Try Model](https://app.roboflow.com/images/try-model-badge.svg)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-boards/model/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_board_segmentation.ipynb)
+
+After configuring your dataset on Roboflow, use
+[`gather_board_images.py`](src/train/gather_board_images.py) to gather board
+images, which get uploaded to Roboflow. Afterward, create a dataset version
+and train with
+[`train_board_segmentation.ipynb`](src/train/train_board_segmentation.ipynb).
 
 #### Training pieces classification
 

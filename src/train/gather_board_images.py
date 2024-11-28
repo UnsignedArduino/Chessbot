@@ -63,12 +63,11 @@ while True:
 
     if captured_frame is not None:
         if key == "y":
-            with NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+            with NamedTemporaryFile(suffix=".jpg") as tmp:
                 print(f"Saving to {tmp.name}")
                 cv2.imwrite(tmp.name, captured_frame)
                 print(f"Uploading to Roboflow")
                 project.upload_image(tmp.name)
-                os.unlink(tmp.name)
             print("Uploaded")
             message = "Uploaded"
             message_time = unix()
