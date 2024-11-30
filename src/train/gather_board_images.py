@@ -1,8 +1,8 @@
 import os
 from tempfile import NamedTemporaryFile
-from time import time as unix
 
 import cv2
+import numpy as np
 from dotenv import load_dotenv
 from picamera2 import Picamera2
 from roboflow import Roboflow
@@ -21,68 +21,35 @@ cam.configure(
     cam.create_video_configuration(main={"format": "RGB888", "size": (800, 606)}))
 cam.start()
 
-font = cv2.FONT_HERSHEY_SIMPLEX
-bottomLeftCornerOfText = (10, 40)
-fontScale = 1
-fontColor = (255, 255, 255)
-thickness = 3
-lineType = 2
 
-captured_frame = None
-message = ""
-message_time = 0
+def upload_np_image(image: np.ndarray):
+    with NamedTemporaryFile(suffix=".jpg") as tmp:
+        print(f"Saving to {tmp.name}")
+        cv2.imwrite(tmp.name, image)
+        print(f"Uploading to Roboflow")
+        project.upload_image(tmp.name)
+
 
 while True:
     original = cam.capture_array()
-
-    if captured_frame is not None:
-        frame = captured_frame.copy()
-        cv2.putText(frame, "Click Y to upload, N to discard",
-                    bottomLeftCornerOfText,
-                    font,
-                    fontScale,
-                    fontColor,
-                    thickness,
-                    lineType)
-        cv2.imshow("Preview", frame)
-    else:
-        frame = original.copy()
-        if message != "":
-            if unix() - message_time > 2:
-                message = ""
-        cv2.putText(frame, "Click C to capture" if message == "" else message,
-                    bottomLeftCornerOfText,
-                    font,
-                    fontScale,
-                    fontColor,
-                    thickness,
-                    lineType)
-        cv2.imshow("Preview", frame)
+    cv2.imshow("Preview - C to capture", original)
 
     key = chr(cv2.waitKey(1) & 0xFF)
-
-    if captured_frame is not None:
-        if key == "y":
-            with NamedTemporaryFile(suffix=".jpg") as tmp:
-                print(f"Saving to {tmp.name}")
-                cv2.imwrite(tmp.name, captured_frame)
-                print(f"Uploading to Roboflow")
-                project.upload_image(tmp.name)
-            print("Uploaded")
-            message = "Uploaded"
-            message_time = unix()
-            captured_frame = None
-        elif key == "n":
-            print("Discarded")
-            message = "Discarded"
-            message_time = unix()
-            captured_frame = None
-    else:
-        if key == "c":
-            print("Captured")
-            print("Press Y to save, N to discard")
-            captured_frame = original.copy()
+    if key == "c":
+        cv2.imshow("Capture - Y to save, N to discard", original)
+        while True:
+            key = chr(cv2.waitKey(1) & 0xFF)
+            if key == "y":
+                upload_np_image(original)
+                print("Uploaded")
+            elif key in ("n", "q"):
+                print("Discarded")
+            else:
+                continue
+            break
+        cv2.destroyWindow("Capture - Y to save, N to discard")
     if key == "q":
         print("Exiting")
-        cv2.destroyAllWindows()
         break
+
+cv2.destroyAllWindows()
