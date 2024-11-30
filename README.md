@@ -60,7 +60,25 @@ model is working correctly.
 
 #### Training pieces classification
 
-WIP
+[![Try Model](https://app.roboflow.com/images/try-model-badge.svg)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-pieces-qxp5p/model/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_piece_classification.ipynb)
+
+After configuring your dataset on Roboflow, use
+[`gather_piece_images.py`](src/train/gather_piece_images.py) to gather board
+images, which get uploaded to Roboflow. Afterward, create a dataset version
+and train with
+[
+`train_piece_classification.ipynb`](src/train/train_piece_classification.ipynb).
+Download `best.pt` to the [`src/models`](src/models)
+directory and rename it to
+[`piece_classification_best.pt`](src/models/piece_classification_best.pt).
+
+Afterward, run
+[`test_piece_classification.py`](src/train/test_piece_classification.py). This
+step
+is necessary as it exports the model to NCNN format. It will also preview
+inference results on the live camera feed, which can be used to ensure the
+model is working correctly.
 
 ## Usage
 
