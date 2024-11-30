@@ -52,9 +52,11 @@ Upload the `best.pt` from the runs directory to the [`src/models`](src/models)
 directory and rename it to
 [`board_segmentation_best.pt`](src/models/board_segmentation_best.pt).
 
-To test your model, use
-[`test_board_segmentation.py`](src/train/test_board_segmentation.py). It should
-display inference results on the live camera feed.
+Afterward, run
+[`test_board_segmentation.py`](src/train/test_board_segmentation.py). This step
+is necessary as it exports the model to NCNN format. It will also preview
+inference results on the live camera feed, which can be used to ensure the
+model is working correctly.
 
 #### Training pieces classification
 
