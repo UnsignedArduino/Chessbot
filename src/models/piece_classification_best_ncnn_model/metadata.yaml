@@ -1,0 +1,27 @@
+description: Ultralytics YOLO11n-cls model trained on /content/Chessbot-Pieces-2
+author: Ultralytics
+date: '2024-11-30T14:41:12.928735'
+version: 8.3.39
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 1
+task: classify
+batch: 1
+imgsz:
+- 64
+- 64
+names:
+  0: B
+  1: K
+  2: N
+  3: P
+  4: Q
+  5: R
+  6: b
+  7: empty
+  8: k
+  9: n
+  10: occluded
+  11: p
+  12: q
+  13: r
