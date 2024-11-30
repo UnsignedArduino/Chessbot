@@ -48,7 +48,7 @@ After configuring your dataset on Roboflow, use
 images, which get uploaded to Roboflow. Afterward, create a dataset version
 and train with
 [`train_board_segmentation.ipynb`](src/train/train_board_segmentation.ipynb).
-Upload the `best.pt` from the runs directory to the [`src/models`](src/models)
+Download `best.pt` to the [`src/models`](src/models)
 directory and rename it to
 [`board_segmentation_best.pt`](src/models/board_segmentation_best.pt).
 

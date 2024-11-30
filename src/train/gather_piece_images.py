@@ -70,7 +70,7 @@ def draw_polygon(pg: Union[Polygon, np.ndarray], image: np.ndarray, pt_size: int
 
 
 def crop_and_reshape_to_square(image: np.ndarray, points: np.ndarray,
-                               size: int = 500) -> np.ndarray:
+                               size: int) -> np.ndarray:
     # Define the destination points for the square image
     dst_points = np.array([
         [size - 1, 0],
@@ -96,6 +96,8 @@ def upload_np_image(image: np.ndarray):
         project.upload_image(tmp.name)
 
 
+chessboard_size = 512
+
 while True:
     frame = cam.capture_array()
 
@@ -108,7 +110,7 @@ while True:
     if results[0].masks is not None:
         mask = results[0].masks.xy[0]
 
-        pg = Polygon(mask).simplify(tolerance=30)
+        pg = Polygon(mask).simplify(tolerance=50)
         preview = draw_polygon(pg, preview)
 
         rectangularity = pg.area / pg.minimum_rotated_rectangle.area
@@ -117,14 +119,17 @@ while True:
 
         if has_four_pts and rectangularity > 0.9:
             chessboard_only = crop_and_reshape_to_square(frame, np.array(
-                [(pt[0], pt[1]) for pt in pg.exterior.coords][:4], dtype="float32"))
+                [(pt[0], pt[1]) for pt in pg.exterior.coords][:4], dtype="float32"),
+                                                         chessboard_size)
 
             chessboard_annotations = chessboard_only.copy()
 
             for i in range(1, 8):
-                cv2.line(chessboard_annotations, (0, i * 500 // 8), (500, i * 500 // 8),
+                cv2.line(chessboard_annotations, (0, i * chessboard_size // 8),
+                         (chessboard_size, i * chessboard_size // 8),
                          (0, 255, 0), 2)
-                cv2.line(chessboard_annotations, (i * 500 // 8, 0), (i * 500 // 8, 500),
+                cv2.line(chessboard_annotations, (i * chessboard_size // 8, 0),
+                         (i * chessboard_size // 8, chessboard_size),
                          (0, 255, 0), 2)
     else:
         write_text_tl(preview, "No chessboard detected")
@@ -147,10 +152,10 @@ while True:
                     count = 1
                     for y in range(8):
                         for x in range(8):
-                            x0 = x * 500 // 8
-                            y0 = y * 500 // 8
-                            x1 = (x + 1) * 500 // 8
-                            y1 = (y + 1) * 500 // 8
+                            x0 = x * chessboard_size // 8
+                            y0 = y * chessboard_size // 8
+                            x1 = (x + 1) * chessboard_size // 8
+                            y1 = (y + 1) * chessboard_size // 8
                             square = captured_frame[y0:y1, x0:x1]
                             print(f"Uploading square {count}/64")
                             upload_np_image(square)
