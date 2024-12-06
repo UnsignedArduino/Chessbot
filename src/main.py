@@ -4,6 +4,7 @@ from pathlib import Path
 import cv2
 
 from cv.board import GetChessboardOnlyResultType, get_chessboard_only
+from cv.pieces import get_piece_matrix
 from utils.cv2_stuff import write_text_tl
 
 sys.path.append(str(Path.cwd() / "src"))
@@ -20,6 +21,7 @@ while True:
     preview = frame.copy()
 
     result = get_chessboard_only(frame)
+    cb_only = None
     if result.result_type == GetChessboardOnlyResultType.CHESSBOARD_FOUND:
         cb_only = result.chessboard
         preview = cb_only
@@ -29,6 +31,11 @@ while True:
         write_text_tl(preview, "Chessboard not quadrilateral")
     elif result.result_type == GetChessboardOnlyResultType.NOT_RECTANGULAR_ENOUGH:
         write_text_tl(preview, "Chessboard not rectangular enough")
+
+    if cb_only is not None:
+        result = get_piece_matrix(cb_only, return_annotations=True)
+        preview = result.annotation
+        write_text_tl(preview, f"{result.confidence:.4f}")
 
     cv2.imshow("Preview", preview)
 

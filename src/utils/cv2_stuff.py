@@ -57,7 +57,7 @@ def get_tile_in_image(image: np.ndarray, row: int, col: int, rows: int = 8,
 font = cv2.FONT_HERSHEY_SIMPLEX
 bottomLeftCornerOfText = (10, 40)
 fontScale = 1
-fontColor = (255, 255, 255)
+fontColor = (0, 0, 0)
 thickness = 3
 lineType = 2
 
