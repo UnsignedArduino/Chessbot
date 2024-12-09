@@ -40,8 +40,9 @@ used.
 
 #### Training board segmentation
 
-[![Try Model](https://app.roboflow.com/images/try-model-badge.svg)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-boards/model/)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_board_segmentation.ipynb)
+[![View dataset on Roboflow](https://img.shields.io/badge/-View_dataset_on_Roboflow-gray?logo=roboflow&logoColor=%236706CE&labelColor=white&color=%236706CE)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-boards)
+[![View dataset on Kaggle](https://img.shields.io/badge/-View_dataset_on_Kaggle-gray?logo=kaggle&logoColor=%2320BEFF&labelColor=gray&color=blue)](https://www.kaggle.com/datasets/unsignedarduino/chessbot-boards)
+[![Train on Colab](https://img.shields.io/badge/-Train_on_Colab-gray?logo=googlecolab&logoColor=%23F9AB00&labelColor=gray&color=blue)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_board_segmentation.ipynb)
 
 After configuring your dataset on Roboflow, use
 [`gather_board_images.py`](src/train/gather_board_images.py) to gather board
@@ -60,8 +61,9 @@ model is working correctly.
 
 #### Training pieces classification
 
-[![Try Model](https://app.roboflow.com/images/try-model-badge.svg)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-pieces-qxp5p/model/)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_piece_classification.ipynb)
+[![View dataset on Roboflow](https://img.shields.io/badge/-View_dataset_on_Roboflow-gray?logo=roboflow&logoColor=%236706CE&labelColor=white&color=%236706CE)](https://universe.roboflow.com/unsignedarduino-9db8i/chessbot-pieces-qxp5p)
+[![View dataset on Kaggle](https://img.shields.io/badge/-View_dataset_on_Kaggle-gray?logo=kaggle&logoColor=%2320BEFF&labelColor=gray&color=blue)](https://www.kaggle.com/datasets/unsignedarduino/chessbot-pieces)
+[![Train on Colab](https://img.shields.io/badge/-Train_on_Colab-gray?logo=googlecolab&logoColor=%23F9AB00&labelColor=gray&color=blue)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_piece_classification.ipynb)
 
 After configuring your dataset on Roboflow, use
 [`gather_piece_images.py`](src/train/gather_piece_images.py) to gather board
