@@ -46,7 +46,7 @@ used.
 
 After configuring your dataset on Roboflow, use
 [`gather_board_images.py`](src/train/gather_board_images.py) to gather board
-images, which get uploaded to Roboflow. Afterward, create a dataset version
+images, which get uploaded to Roboflow automatically. Afterward, create a dataset version
 and train with
 [`train_board_segmentation.ipynb`](src/train/train_board_segmentation.ipynb).
 Download `best.pt` to the [`src/models`](src/models)
@@ -67,7 +67,7 @@ model is working correctly.
 
 After configuring your dataset on Roboflow, use
 [`gather_piece_images.py`](src/train/gather_piece_images.py) to gather board
-images, which get uploaded to Roboflow. Afterward, create a dataset version
+images. Upload the directory to Roboflow. Afterward, create a dataset version
 and train with
 [
 `train_piece_classification.ipynb`](src/train/train_piece_classification.ipynb).
