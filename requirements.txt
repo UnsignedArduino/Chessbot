@@ -1,5 +1,5 @@
 opencv-python
 roboflow
 python-dotenv
-ultralytics==8.3.40
+ultralytics
 shapely
