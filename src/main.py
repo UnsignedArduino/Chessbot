@@ -1,15 +1,30 @@
 import sys
 from pathlib import Path
 
+sys.path.append(str(Path.cwd() / "src"))
+
+import logging
+from argparse import ArgumentParser
+
 import cv2
+from picamera2 import Picamera2
+from utils.logger import create_logger, set_all_stdout_logger_levels
 
 from cv.board import GetChessboardOnlyResultType, get_chessboard_only
 from cv.pieces import get_piece_matrix
 from utils.cv2_stuff import write_text_tl
 
-sys.path.append(str(Path.cwd() / "src"))
+logger = create_logger(name=__name__, level=logging.DEBUG)
 
-from picamera2 import Picamera2
+parser = ArgumentParser(description="A Raspberry Pi that uses a camera to look at the "
+                                    "board and tells you it's move on a monitor.")
+parser.add_argument("-v", "--verbose", action="store_true",
+                    help="Enable verbose logging")
+args = parser.parse_args()
+logger.debug(args)
+if args.verbose:
+    logger.debug("Enabling verbose logging")
+    set_all_stdout_logger_levels(logging.DEBUG)
 
 cam = Picamera2()
 cam.configure(

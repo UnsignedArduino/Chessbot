@@ -1,5 +1,6 @@
 opencv-python
+numpy
 roboflow
 python-dotenv
-ultralytics
+ultralytics[export]
 shapely

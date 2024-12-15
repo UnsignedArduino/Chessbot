@@ -7,25 +7,27 @@ on a monitor.
 
 1. Have a Raspberry Pi (preferably 5) and a Raspberry Pi camera module and a
    monitor hooked up. Have the Raspberry Pi OS and desktop installed.
-2. Install the required packages.
+2. Update the Raspberry Pi. This step may be required if your camera feed is
+   all messed up. (I wasted an entire day on this)
+3. Install the required packages.
    ```bash
    sudo apt install python3-picamera2
    ```
-3. Create the virtual environment and inherit system packages.
+4. Create the virtual environment and inherit system packages.
    ```bash
    python -m venv .venv --system-site-packages
    ``` 
-4. Install [`requirements.txt`](requirements.txt) in the virtual environment.
+5. Install [`requirements.txt`](requirements.txt) in the virtual environment.
    ```bash
    source .venv/bin/activate
    pip install -r requirements.txt
    ```
-5. Uninstall `opencv-python-headless` if installed. (It breaks usage of
+6. Uninstall `opencv-python-headless` if installed. (It breaks usage of
    functions such as `imshow`...)
    ```bash
    pip uninstall opencv-python-headless
    ``` 
-6. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
+7. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
    want to train it yourself. (You will need a Roboflow account)
 
 ### Model training
@@ -46,7 +48,8 @@ used.
 
 After configuring your dataset on Roboflow, use
 [`gather_board_images.py`](src/train/gather_board_images.py) to gather board
-images, which get uploaded to Roboflow automatically. Afterward, create a dataset version
+images, which get uploaded to Roboflow automatically. Afterward, create a
+dataset version
 and train with
 [`train_board_segmentation.ipynb`](src/train/train_board_segmentation.ipynb).
 Download `best.pt` to the [`src/models`](src/models)
