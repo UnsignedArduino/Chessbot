@@ -31,7 +31,7 @@ cam = None
 debug_image = Path(args.debug_use_image) if args.debug_use_image else None
 
 if debug_image is not None:
-    logger.debug(f"Using saved image for debugging")
+    logger.info(f"Using saved image {debug_image} for debugging")
 
     from utils.fake_picamera2 import FakePicamera2
 
@@ -71,12 +71,12 @@ while True:
     cv2.imshow("Preview", preview)
 
     if debug_image is not None:
-        print("Press any key to exit")
+        logger.info("Press any key to exit")
         cv2.waitKey(0)
         break
     key = chr(cv2.waitKey(1) & 0xFF)
     if key == "q":
-        print("Exiting")
+        logger.debug("Exiting")
         break
 
 cv2.destroyAllWindows()

@@ -1,20 +1,21 @@
-import sys
+import logging
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Optional
 
-sys.path.append(str(Path.cwd() / "src"))
-
 import numpy as np
-
 from shapely.geometry.polygon import Polygon
 from ultralytics import YOLO
 
 from utils.cv2_stuff import crop_and_reshape_to_square
+from utils.logger import create_logger
 from utils.math_stuff import find_closest_to_right_angles
 
+logger = create_logger(name=__name__, level=logging.DEBUG)
+
 board_segment_ncnn_path = Path.cwd() / "src" / "models" / "board_segmentation_best_ncnn_model"
+logger.info(f"Loading board segmentation model from {board_segment_ncnn_path}")
 board_model = YOLO(board_segment_ncnn_path, task="segment")
 
 poly_simp_tolerance = 20

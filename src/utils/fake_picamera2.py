@@ -15,12 +15,14 @@ class FakePicamera2:
         self.frame = None
 
     def start(self):
-        logger.debug("Start")
-        self.frame = cv2.imread(str(self.image_path.expanduser().resolve()))
+        logger.debug("Start FakePicamera2")
+        p = str(self.image_path.expanduser().resolve())
+        logger.debug(f"Reading image from {p}")
+        self.frame = cv2.imread(p)
 
     def capture_array(self):
         return self.frame
 
     def stop(self):
-        logger.debug("Stop")
+        logger.debug("Stop FakePicamera2")
         self.frame = None

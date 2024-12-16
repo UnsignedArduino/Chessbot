@@ -1,16 +1,18 @@
-import sys
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import cv2
+import numpy as np
 from ultralytics import YOLO
 
-sys.path.append(str(Path.cwd() / "src"))
+from utils.logger import create_logger
 
-import numpy as np
+logger = create_logger(name=__name__, level=logging.DEBUG)
 
 piece_classify_ncnn_path = Path.cwd() / "src" / "models" / "piece_classification_best_ncnn_model"
+logger.info(f"Loading piece classification model from {piece_classify_ncnn_path}")
 piece_model = YOLO(piece_classify_ncnn_path, task="classify")
 
 colors = {
