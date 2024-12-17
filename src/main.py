@@ -67,6 +67,7 @@ while True:
         result = get_piece_matrix(cb_only, return_annotations=True)[0]
         preview = result.annotation
         write_text_tl(preview, f"{result.confidence:.4f}")
+        print(result.pieces)
 
     cv2.imshow("Preview", preview)
 

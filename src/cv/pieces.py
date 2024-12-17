@@ -36,7 +36,7 @@ colors = {
 
 @dataclass
 class GetPieceMatrixResult:
-    pieces: np.ndarray
+    pieces: str
     confidence: float
     annotation: Optional[np.ndarray] = None
 
@@ -50,8 +50,18 @@ def get_piece_matrix(cb_only: np.ndarray,
     :param cb_only: Chessboard only image.
     :param top_n_confident: Number of top most confident chessboard arrangements.
     :param return_annotations: Whether to return an annotated image.
-    :return: A GetPieceMatrixResult dataclass. pieces will be a 2D numpy array,
-     first dimension is the row, second dimension is the column.
+    :return: A GetPieceMatrixResult dataclass. str will be a "text" representation of
+     the board from the camera's perspective, with newlines for each row. Ex:
+     ```
+     r . b q k b . r
+     p p p p . Q p p
+     . . n . . n . .
+     . . . . p . . .
+     . . B . P . . .
+     . . . . . . . .
+     P P P P . P P P
+     R N B . K . N R
+     ```
     """
     global colors
     chessboard_size = cb_only.shape[0]
@@ -94,7 +104,10 @@ def get_piece_matrix(cb_only: np.ndarray,
         pieces = np.zeros((8, 8), dtype=str)
         for y in range(8):
             for x in range(8):
-                pieces[y, x] = combo[y * 8 + x][0]
+                class_name = combo[y * 8 + x][0]
+                class_name = class_name if class_name != "empty" else "."
+                class_name = class_name if class_name != "occluded" else "?"
+                pieces[y, x] = class_name
         confidence = sum(c for _, c in combo) / 64
         annotation = None
         if return_annotations:
@@ -105,13 +118,15 @@ def get_piece_matrix(cb_only: np.ndarray,
                     y0 = y * chessboard_size // 8
                     x1 = (x + 1) * chessboard_size // 8
                     y1 = (y + 1) * chessboard_size // 8
-                    piece = combo[y * 8 + x][0]
+                    class_name = combo[y * 8 + x][0]
                     cv2.rectangle(annotation, (x0 + 4, y0 + 4), (x1 - 4, y1 - 4),
-                                  (colors[piece][2], colors[piece][1],
-                                   colors[piece][0]), 4)
-
+                                  (colors[class_name][2], colors[class_name][1],
+                                   colors[class_name][0]), 4)
+        string = ""
+        for row in pieces:
+            string += " ".join(row) + "\n"
         result.append(
-            GetPieceMatrixResult(pieces=pieces, confidence=confidence,
+            GetPieceMatrixResult(pieces=string, confidence=confidence,
                                  annotation=annotation)
         )
 
