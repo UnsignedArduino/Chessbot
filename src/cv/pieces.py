@@ -125,6 +125,7 @@ def get_piece_matrix(cb_only: np.ndarray,
         string = ""
         for row in pieces:
             string += " ".join(row) + "\n"
+        string = string[:-1]
         result.append(
             GetPieceMatrixResult(pieces=string, confidence=confidence,
                                  annotation=annotation)

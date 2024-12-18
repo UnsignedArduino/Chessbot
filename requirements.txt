@@ -2,5 +2,8 @@ opencv-python
 numpy
 roboflow
 python-dotenv
-ultralytics[export]
+ultralytics
 shapely
+chess
+reportlab[pycairo]
+svglib

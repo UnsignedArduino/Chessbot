@@ -1,8 +1,12 @@
+from functools import lru_cache
+from io import BytesIO, StringIO
 from typing import Union
 
 import cv2
 import numpy as np
+from reportlab.graphics import renderPM
 from shapely.geometry.polygon import Polygon
+from svglib.svglib import svg2rlg
 
 
 def draw_polygon(pg: Union[Polygon, np.ndarray], image: np.ndarray, pt_size: int = 5,
@@ -76,3 +80,12 @@ def write_text_tl(image: np.ndarray, text: str):
                 font_color,
                 thickness,
                 line_type)
+
+
+@lru_cache(maxsize=32)
+def svg_to_numpy(svg: str) -> np.ndarray:
+    drawing = svg2rlg(StringIO(svg))
+    png_buf = BytesIO()
+    renderPM.drawToFile(drawing, png_buf, fmt="PNG")
+    png_buf.seek(0)
+    return cv2.imdecode(np.frombuffer(png_buf.read(), np.uint8), cv2.IMREAD_COLOR)

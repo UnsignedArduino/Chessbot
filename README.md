@@ -9,25 +9,27 @@ on a monitor.
    monitor hooked up. Have the Raspberry Pi OS and desktop installed.
 2. Update the Raspberry Pi. This step may be required if your camera feed is
    all messed up. (I wasted an entire day on this)
-3. Install the required packages.
+3. Use Python 3.11, at the time of writing some of the used packages are not
+   compatible with Python 3.12.
+4. Install the required packages.
    ```bash
    sudo apt install python3-picamera2
    ```
-4. Create the virtual environment and inherit system packages.
+5. Create the virtual environment and inherit system packages.
    ```bash
    python -m venv .venv --system-site-packages
    ``` 
-5. Install [`requirements.txt`](requirements.txt) in the virtual environment.
+6. Install [`requirements.txt`](requirements.txt) in the virtual environment.
    ```bash
    source .venv/bin/activate
    pip install -r requirements.txt
    ```
-6. Uninstall `opencv-python-headless` if installed. (It breaks usage of
+7. Uninstall `opencv-python-headless` if installed. (It breaks usage of
    functions such as `imshow`...)
    ```bash
    pip uninstall opencv-python-headless
    ``` 
-7. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
+8. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
    want to train it yourself. (You will need a Roboflow account)
 
 ### Model training
