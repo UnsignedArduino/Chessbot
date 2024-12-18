@@ -56,10 +56,15 @@ while True:
     cv2.imshow("Camera preview", chessbot.get_camera_preview())
     cv2.imshow("Chessboard preview", chessbot.get_chessboard_preview())
 
-    key = chr(cv2.waitKey(1) & 0xFF)
-    if key == "q":
-        logger.debug("Exiting")
+    if debug_image is not None:
+        logger.info("Waiting for key press to exit")
+        cv2.waitKey(0)
         break
+    else:
+        key = chr(cv2.waitKey(1) & 0xFF)
+        if key == "q":
+            logger.debug("Exiting")
+            break
 
 cv2.destroyAllWindows()
 cam.stop()
