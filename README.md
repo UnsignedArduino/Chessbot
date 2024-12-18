@@ -93,22 +93,23 @@ WIP
 
 ### Debugging
 
-If you don't/can't use a camera, use the `--debug-use-image` flag to use a
-static image, so you can run it on any computer. (The only Raspberry Pi
-specific code is the camera access, which is replaced with image reading code.)
+If you don't/can't use a camera, use the `--debug-use-image-dir` flag to use a
+directory of static images, so you can run it on any computer. (The only 
+Raspberry Pi specific code is the camera access, which is replaced with image 
+reading code.)
 
 ```commandline
-python src\main.py --debug-use-image "test\starting pos black pov.jpg" --verbose 
+python src/main.py --debug-use-image-dir "test/starting pos white pov" --verbose 
 ```
 
 The image should be 800x606, see [
-`test/starting pos black pov.jpg`](test/starting%20pos%20black%20pov.jpg)
+`test/starting pos white pov`](test/starting%20pos%20white%20pov)
 for an example. You can capture your own image on the Raspberry Pi with a
 Picamera and transfer it to your computer to be used with
 [`test_camera.py`](src/train/test_camera.py):
 
 ```commandline
-python src\train\test_camera.py  -d /home/pi 
+python src/train/test_camera.py  -d /home/pi 
 ```
 
 Press `c` to save an image to the directory specified with `-d`.

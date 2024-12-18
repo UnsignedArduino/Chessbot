@@ -15,8 +15,9 @@ logger = create_logger(name=__name__, level=logging.DEBUG)
 
 parser = ArgumentParser(description="A Raspberry Pi that uses a camera to look at the "
                                     "board and tells you it's move on a monitor.")
-parser.add_argument("--debug-use-image", type=Path, default=None,
-                    help="Use an image instead of the camera as the source")
+parser.add_argument("--debug-use-image-dir", type=Path, default=None,
+                    help="Use a directory of images instead of the camera as the "
+                         "source")
 parser.add_argument("-v", "--verbose", action="store_true",
                     help="Enable verbose logging")
 args = parser.parse_args()
@@ -26,14 +27,14 @@ if args.verbose:
     set_all_stdout_logger_levels(logging.DEBUG)
 
 cam = None
-debug_image = Path(args.debug_use_image) if args.debug_use_image else None
+debug_image_dir = Path(args.debug_use_image_dir) if args.debug_use_image_dir else None
 
-if debug_image is not None:
-    logger.info(f"Using saved image {debug_image} for debugging")
+if debug_image_dir is not None:
+    logger.info(f"Using image directory {debug_image_dir} for debugging")
 
     from utils.fake_picamera2 import FakePicamera2
 
-    cam = FakePicamera2(debug_image)
+    cam = FakePicamera2(debug_image_dir)
     cam.start()
 else:
     logger.debug("Using Picamera2")
@@ -56,15 +57,15 @@ while True:
     cv2.imshow("Camera preview", chessbot.get_camera_preview())
     cv2.imshow("Chessboard preview", chessbot.get_chessboard_preview())
 
-    if debug_image is not None:
-        logger.info("Waiting for key press to exit")
-        cv2.waitKey(0)
-        break
+    key = ""
+    if debug_image_dir is not None:
+        logger.info("Waiting for key press to read next frame")
+        key = chr(cv2.waitKey(0) & 0xFF)
     else:
         key = chr(cv2.waitKey(1) & 0xFF)
-        if key == "q":
-            logger.debug("Exiting")
-            break
+    if key == "q":
+        logger.debug("Exiting")
+        break
 
 cv2.destroyAllWindows()
 cam.stop()
