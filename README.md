@@ -119,4 +119,4 @@ transfer it to your computer to be used with
 python src/train/test_camera.py  -d /home/pi 
 ```
 
-Press `c` to save an image to the directory specified with `-d`.
+Press <kbd>c</kbd> to save an image to the directory specified with `-d`.
