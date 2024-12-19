@@ -20,6 +20,7 @@ on a monitor.
    python -m venv .venv --system-site-packages
    ``` 
 6. Install [`requirements.txt`](requirements.txt) in the virtual environment.
+   This will take a long time.
    ```bash
    source .venv/bin/activate
    pip install -r requirements.txt
@@ -28,11 +29,12 @@ on a monitor.
    functions such as `imshow`...)
    ```bash
    pip uninstall opencv-python-headless
-   ``` 
-8. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
-   want to train it yourself. (You will need a Roboflow account)
+   ```
 
 ### Model training
+
+8. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
+   want to train it yourself. (You will need a Roboflow account)
 
 The bot requires two models, one for segmenting the board and another for
 classifying the pieces found on squares. This requires two Roboflow datasets
@@ -94,18 +96,23 @@ WIP
 ### Debugging
 
 If you don't/can't use a camera, use the `--debug-use-image-dir` flag to use a
-directory of static images, so you can run it on any computer. (The only 
-Raspberry Pi specific code is the camera access, which is replaced with image 
+directory of static images, so you can run it on any computer. (The only
+Raspberry Pi specific code is the camera access, which is replaced with image
 reading code.)
 
 ```commandline
-python src/main.py --debug-use-image-dir "test/starting pos white pov" --verbose 
+python src/main.py --debug-use-image-dir "test/scholars math game white pov" --verbose 
 ```
 
-The image should be 800x606, see [
-`test/starting pos white pov`](test/starting%20pos%20white%20pov)
-for an example. You can capture your own image on the Raspberry Pi with a
-Picamera and transfer it to your computer to be used with
+The images should be 800x606, see
+[`test/starting pos white pov`](test/starting%20pos%20white%20pov) for an
+example. The images will be ordered by name, so best to order them with
+numbers. (e.g. `01.png`, `02.png`, ...) Use <kbd>w</kbd> or <kbd>d</kbd> to
+advance to the next image, and <kbd>s</kbd> or <kbd>a</kbd> to go to the
+previous image. <kbd>q</kbd> to quit.
+
+You can capture your own image on the Raspberry Pi with a Picamera and
+transfer it to your computer to be used with
 [`test_camera.py`](src/train/test_camera.py):
 
 ```commandline
