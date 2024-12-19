@@ -1,3 +1,7 @@
+from collections import namedtuple
+from dataclasses import dataclass
+from enum import Enum
+
 import chess
 import chess.svg
 
@@ -25,3 +29,19 @@ def board_sync_from_chessboard_arrangement(board: chess.Board,
                     ss.add(chess.square(col_index, 7 - row_index))
                 board.remove_piece_at(chess.square(col_index, 7 - row_index))
     return ss
+
+
+class ChessboardDifferenceType(Enum):
+    ADD = "ADD"
+    REMOVE = "REMOVE"
+
+
+@dataclass
+class ChessboardDifference:
+    type: ChessboardDifferenceType
+    square: chess.Square
+    piece: chess.PieceType
+
+
+def find_chessboard_differences(old: str, new: str) -> list[ChessboardDifference]:
+    pass

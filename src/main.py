@@ -56,12 +56,12 @@ while True:
 
     chessbot.update(frame)
 
-    cam_preview = chessbot.get_camera_preview()
+    cam_preview = chessbot.camera_preview
     if debug_image_dir is not None:
         write_text(cam_preview,
                    f"Image {cam.image_index + 1}/{cam.max_image_index + 1}", 10, 40)
     cv2.imshow("Camera preview", cam_preview)
-    cv2.imshow("Chessboard preview", chessbot.get_chessboard_preview())
+    cv2.imshow("Chessboard preview", chessbot.chessboard_preview)
 
     key = ""
     if debug_image_dir is not None:
