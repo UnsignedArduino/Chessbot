@@ -59,8 +59,19 @@ while True:
 
     key = ""
     if debug_image_dir is not None:
-        logger.info("Waiting for key press to read next frame")
-        key = chr(cv2.waitKey(0) & 0xFF)
+        logger.info("Use 'a' or 's' to go back, 'd' or 'w' to go forward, 'q' to quit.")
+        while True:
+            key = chr(cv2.waitKey(0) & 0xFF)
+            if key in ("d", "w"):
+                cam.image_index += 1
+            elif key in ("a", "s"):
+                cam.image_index -= 1
+            elif key == "q":
+                pass
+            else:
+                print("Unknown key")
+                continue
+            break
     else:
         key = chr(cv2.waitKey(1) & 0xFF)
     if key == "q":
