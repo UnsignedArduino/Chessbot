@@ -11,11 +11,21 @@ on a monitor.
    all messed up. (I wasted an entire day on this)
 3. Use Python 3.11, at the time of writing some of the used packages are not
    compatible with Python 3.12.
-4. Install the required packages.
+
+### Makefile
+
+There is an (untested) [`Makefile`](Makefile) available which performs the
+rest of the installation steps detailed below. For the Pi, run
+`make install-for-pi` and for Windows, run `make install-for-windows`.
+
+### Manual installation
+
+4. Install the required packages for the Pi.
    ```bash
    sudo apt install python3-picamera2
    ```
 5. Create the virtual environment and inherit system packages.
+   (`--system-site-packages` only needed for the Pi)
    ```bash
    python -m venv .venv --system-site-packages
    ``` 
@@ -30,11 +40,10 @@ on a monitor.
    ```bash
    pip uninstall opencv-python-headless
    ```
-
-### Model training
-
 8. Copy [`.env.sample`](.env.sample) to `.env` and fill in the values if you
    want to train it yourself. (You will need a Roboflow account)
+
+### Model training
 
 The bot requires two models, one for segmenting the board and another for
 classifying the pieces found on squares. This requires two Roboflow datasets
@@ -93,7 +102,13 @@ model is working correctly.
 
 WIP
 
+```commandline
+python src/main.py --verbose
+```
+
 ### Debugging
+
+> Check the [`Makefile`](Makefile) for more `run-*` commands.
 
 If you don't/can't use a camera, use the `--debug-use-image-dir` flag to use a
 directory of static images, so you can run it on any computer. (The only
@@ -101,7 +116,7 @@ Raspberry Pi specific code is the camera access, which is replaced with image
 reading code.)
 
 ```commandline
-python src/main.py --debug-use-image-dir "test/scholars math game white pov" --verbose 
+python src/main.py --debug-use-image-dir "test/scholars mate game white pov" --verbose 
 ```
 
 The images should be 800x606, see
