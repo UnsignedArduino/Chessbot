@@ -13,7 +13,7 @@ on a monitor.
    compatible with Python 3.12.
 4. Clone this repo.
 
-There is a [`Makefile`](Makefile) available which performs the
+There is an (untested) [`Makefile`](Makefile) available which performs the
 rest of the installation steps. For the Pi, run `make install-for-pi` and for
 Windows, run `make install-for-windows`. (If you don't have `make` installed,
 you can run the commands manually)

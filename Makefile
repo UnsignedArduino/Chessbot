@@ -26,12 +26,6 @@ install-for-windows:
 	# Breaks usage of imshow, etc.
 	pip uninstall opencv-python-headless -y
 
-activate-venv-for-pi:
-	source .venv/bin/activate
-
-activate-venv-for-windows:
-	.venv\Scripts\activate
-
 run-main:
 	python src/main.py --verbose
 
