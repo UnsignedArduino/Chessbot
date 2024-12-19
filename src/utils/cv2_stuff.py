@@ -58,17 +58,25 @@ def get_tile_in_image(image: np.ndarray, row: int, col: int, rows: int = 8,
     return image[y0:y1, x0:x1]
 
 
-def write_text_tl(image: np.ndarray, text: str):
+def write_text(image: np.ndarray, text: str, x: int = 10, y: int = 10):
+    """
+    Write text on an image.
+
+    :param image: Numpy image to write to.
+    :param text: Text to write.
+    :param x: Left coordinate of the text. (x) Defaults to 10.
+    :param y: Top coordinate of the text. (y) Defaults to 10.
+    """
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 1
     thickness = 3
     line_type = 2
 
     (width, height), _ = cv2.getTextSize(text, font, font_scale, thickness)
-    bottom_left_corner_of_text = (10, height + 10)
+    bottom_left_corner_of_text = (x, height + y)
 
-    top_left_corner = image[10:height, 10:width]
-    brightness = np.mean(top_left_corner)
+    text_area = image[y:y + height, x:x + width]
+    brightness = np.mean(text_area)
 
     font_color = (0, 0, 0) if brightness > 127 else (255, 255, 255)
 

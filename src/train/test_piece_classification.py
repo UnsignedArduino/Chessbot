@@ -10,7 +10,7 @@ from picamera2 import Picamera2
 from shapely.geometry.polygon import Polygon
 from ultralytics import YOLO
 
-from utils.cv2_stuff import crop_and_reshape_to_square, write_text_tl
+from utils.cv2_stuff import crop_and_reshape_to_square, write_text
 from utils.math_stuff import find_closest_to_right_angles
 
 board_segment_model_path = Path.cwd() / "src" / "models" / "board_segmentation_best.pt"
@@ -87,9 +87,9 @@ while True:
 
             frame = chessboard_only
         else:
-            write_text_tl(frame, "Not square")
+            write_text(frame, "Not square", 10, 10)
     else:
-        write_text_tl(frame, "No chessboard detected")
+        write_text(frame, "No chessboard detected", 10, 10)
 
     cv2.imshow("Board segmentation and piece classification inference", frame)
 

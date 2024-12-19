@@ -7,7 +7,7 @@ import numpy as np
 from cv.board import GetChessboardOnlyResultType, get_chessboard_only
 from cv.pieces import get_piece_matrix
 from utils.chess_stuff import board_sync_from_chessboard_arrangement
-from utils.cv2_stuff import svg_to_numpy, write_text_tl
+from utils.cv2_stuff import svg_to_numpy, write_text
 from utils.logger import create_logger
 
 logger = create_logger(name=__name__, level=logging.DEBUG)
@@ -35,18 +35,19 @@ class Chessbot:
             cb_only = result.chessboard
             self.camera_preview = result.chessboard.copy()
         elif result.result_type == GetChessboardOnlyResultType.NO_CHESSBOARD_FOUND:
-            write_text_tl(self.camera_preview, "No chessboard found")
+            write_text(self.camera_preview, "No chessboard found", 10, 10)
         elif result.result_type == GetChessboardOnlyResultType.NOT_QUADRILATERAL:
-            write_text_tl(self.camera_preview, "Chessboard not quadrilateral")
+            write_text(self.camera_preview, "Chessboard not quadrilateral", 10, 10)
         elif result.result_type == GetChessboardOnlyResultType.NOT_RECTANGULAR_ENOUGH:
-            write_text_tl(self.camera_preview, "Chessboard not rectangular enough")
+            write_text(self.camera_preview, "Chessboard not rectangular enough", 10,
+                       10)
 
         unknown_squares = None
 
         if cb_only is not None:
             result = get_piece_matrix(cb_only, return_annotations=True)[0]
             self.camera_preview = result.annotation
-            write_text_tl(self.camera_preview, f"{result.confidence:.4f}")
+            write_text(self.camera_preview, f"{result.confidence:.4f}", 10, 10)
             unknown_squares = board_sync_from_chessboard_arrangement(self.board,
                                                                      result.pieces)
             # print(result.pieces)

@@ -55,6 +55,15 @@ class FakePicamera2:
             logger.debug(f"Setting image index to {value}")
             self._image_index = value
 
+    @property
+    def max_image_index(self) -> int:
+        """
+        Get the maximum image index in the directory.
+
+        :return: The maximum image index.
+        """
+        return self._max_image_index
+
     def capture_array(self) -> np.ndarray:
         path = str(self._image_paths[self._image_index].expanduser().resolve())
         logger.debug(f"Reading {path} (index {self._image_index}) into camera")

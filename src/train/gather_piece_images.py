@@ -15,7 +15,7 @@ from shapely import Polygon
 from ultralytics import YOLO
 
 from utils.cv2_stuff import crop_and_reshape_to_square, draw_polygon, \
-    get_tile_in_image, write_text_tl
+    get_tile_in_image, write_text
 from utils.math_stuff import find_closest_to_right_angles
 
 parser = ArgumentParser(description="Helps gather piece images")
@@ -84,7 +84,7 @@ while True:
         draw_polygon(pg, preview, pt_color=(0, 0, 255), line_color=(0, 0, 255))
         corners = [(int(x), int(y)) for x, y in pg.exterior.coords][:-1]
 
-        write_text_tl(preview, f"{rectangularity:.3f}, {len(corners)}")
+        write_text(preview, f"{rectangularity:.3f}, {len(corners)}", 10, 10)
 
         if rectangularity > 0.90 and len(corners) == 4:
             chessboard_only = crop_and_reshape_to_square(frame, np.array(corners,

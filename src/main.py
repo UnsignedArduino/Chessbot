@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+from utils.cv2_stuff import write_text
+
 sys.path.append(str(Path.cwd() / "src"))
 
 import logging
@@ -54,7 +56,11 @@ while True:
 
     chessbot.update(frame)
 
-    cv2.imshow("Camera preview", chessbot.get_camera_preview())
+    cam_preview = chessbot.get_camera_preview()
+    if debug_image_dir is not None:
+        write_text(cam_preview,
+                   f"Image {cam.image_index + 1}/{cam.max_image_index + 1}", 10, 40)
+    cv2.imshow("Camera preview", cam_preview)
     cv2.imshow("Chessboard preview", chessbot.get_chessboard_preview())
 
     key = ""
