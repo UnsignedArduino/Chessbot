@@ -4,8 +4,10 @@ import chess
 import chess.svg
 import numpy as np
 
+from chessbot_move_heuristics import ChessbotMoveHeuristics
 from cv.board import GetChessboardOnlyResultType, get_chessboard_only
 from cv.pieces import GetPieceMatrixResult, get_piece_matrix
+from utils.chess_stuff import find_chessboard_differences
 # from utils.chess_stuff import board_sync_from_chessboard_arrangement
 from utils.cv2_stuff import svg_to_numpy, write_text
 from utils.logger import create_logger
@@ -16,7 +18,7 @@ logger = create_logger(name=__name__, level=logging.DEBUG)
 class Chessbot:
     def __init__(self):
         self._board = chess.Board()
-        self._board.clear()
+        self._move_heuristics = ChessbotMoveHeuristics(self._board)
 
         self._camera_preview = None
         self._chessboard_preview = None
@@ -26,8 +28,8 @@ class Chessbot:
     def _try_update_board_with_move(self, result: GetPieceMatrixResult):
         cb = str(self._board)
         vb = result.pieces
-        print(f"Current chessboard: {cb}\n")
-        print(f"Viewed chessboard: {vb}\n")
+        diffs = find_chessboard_differences(cb, vb)
+        self._move_heuristics.try_update_board(diffs)
 
     def update(self, frame: np.ndarray) -> None:
         """
