@@ -1,6 +1,7 @@
 import logging
 
 import chess
+import chess.pgn
 import chess.svg
 import numpy as np
 
@@ -24,6 +25,11 @@ class Chessbot:
         self._chessboard_preview = None
 
         logger.debug("Chessbot created")
+
+    def _get_game_pgn_preview(self) -> str:
+        pgn_game = chess.pgn.Game.from_board(self._board)
+        exporter = chess.pgn.StringExporter(headers=False)
+        return pgn_game.accept(exporter)
 
     def _try_update_board_with_move(self, result: GetPieceMatrixResult):
         cb = str(self._board)
@@ -71,6 +77,8 @@ class Chessbot:
         else:
             # TODO: Indicate this state back to the main program
             self._board.clear()
+
+        print(self._get_game_pgn_preview())
 
         self._chessboard_preview = svg_to_numpy(
             chess.svg.board(self._board, squares=unknown_squares, size=512))

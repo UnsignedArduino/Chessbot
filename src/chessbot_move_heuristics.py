@@ -61,8 +61,8 @@ class ChessbotMoveHeuristics:
         return None
 
     def try_update_with_capture(self, differences: list[ChessboardDifference]) -> \
-    Optional[
-        chess.Move]:
+            Optional[
+                chess.Move]:
         """
         If the differences represent a capture, update the board with the capture.
 
@@ -85,9 +85,9 @@ class ChessbotMoveHeuristics:
             addition = list(filter(lambda x: x.type == ChessboardDifferenceType.ADD,
                                    differences))[0]
             removal_captured = \
-            list(filter(lambda x: x.square == addition.square, removals))[0]
+                list(filter(lambda x: x.square == addition.square, removals))[0]
             removal_capturing = \
-            list(filter(lambda x: x.square != addition.square, removals))[0]
+                list(filter(lambda x: x.square != addition.square, removals))[0]
 
             # The addition and the capturing piece must be the same
             if addition.piece != removal_capturing.piece:
@@ -119,8 +119,11 @@ class ChessbotMoveHeuristics:
 
         :param differences: A list of differences.
         """
+        if len(differences) == 0:
+            return
         pprint(differences)
         if self.try_update_with_move(differences) is not None:
             return
         if self.try_update_with_capture(differences) is not None:
             return
+        # TODO: Handle promotion, castling, en passant
