@@ -83,7 +83,7 @@ def get_piece_matrix(cb_only: np.ndarray,
             possible_to_save = []
             # if possible_pieces[0][0] == "occluded":
             #     print(possible_pieces)
-            while sum(c for _, c in possible_to_save) < 0.95 and len(
+            while sum(c for _, c in possible_to_save) < 0.99 and len(
                     possible_pieces) > 1:
                 possible_to_save.append(possible_pieces.pop(0))
             # print(
