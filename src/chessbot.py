@@ -96,7 +96,7 @@ class Chessbot:
         # Use ML model to classify each square and get a chessboard arrangement
         move = None
         if cb_only is not None:
-            results = get_piece_matrix(cb_only, top_n_confident=20,
+            results = get_piece_matrix(cb_only, top_n_confident=10,
                                        return_annotations=True)
             # for i, r in enumerate(results):
             #     print(

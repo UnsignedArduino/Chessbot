@@ -1,6 +1,6 @@
-description: Ultralytics YOLO11n-seg model trained on /content/Chessbot-Boards-2/data.yaml
+description: Ultralytics YOLO11n-seg model trained on /content/Chessbot-Boards-3/data.yaml
 author: Ultralytics
-date: '2024-12-14T10:45:24.585527'
+date: '2024-12-24T18:25:41.062175'
 version: 8.3.49
 license: AGPL-3.0 License (https://ultralytics.com/license)
 docs: https://docs.ultralytics.com
