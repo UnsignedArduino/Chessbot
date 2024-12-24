@@ -249,7 +249,8 @@ class ChessbotMoveHeuristics:
                 return None
 
             # Must be a legal move
-            move = self._board.find_move(removal.square, addition.square)
+            move = self._board.find_move(removal.square, addition.square,
+                                         addition.piece.piece_type)
             logger.debug(f"Found move {move}")
             self._board.push(move)
 

@@ -118,7 +118,6 @@ class Chessbot:
         # Find which king is in check
         fill = {}
         checkers = self._board.checkers()
-        check_square = None
         if checkers:
             # Get a piece that is checking the king (although multiple checkers are
             # possible, they should all be the same color)
