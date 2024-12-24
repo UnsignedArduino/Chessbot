@@ -54,6 +54,7 @@ def find_chessboard_differences(old: str, new: str) -> list[ChessboardDifference
     :param old: Old board arrangement.
     :param new: New board arrangement.
     :return: A list of differences.
+    :raises ValueError: If unknown squares are compared.
     """
     differences = []
     old_rows = old.strip().split('\n')
@@ -61,6 +62,8 @@ def find_chessboard_differences(old: str, new: str) -> list[ChessboardDifference
     for row_index, (old_row, new_row) in enumerate(zip(old_rows, new_rows)):
         for col_index, (old_piece, new_piece) in enumerate(
                 zip(old_row.split(" "), new_row.split(" "))):
+            if old_piece == "?" or new_piece == "?":
+                raise ValueError("Unknown squares should not be compared")
             if old_piece != new_piece:
                 square = chess.square(col_index, 7 - row_index)
                 if old_piece == ".":

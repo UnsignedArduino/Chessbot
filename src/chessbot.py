@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 
 import chess
 import chess.pgn
@@ -14,6 +15,14 @@ from utils.cv2_stuff import svg_to_numpy, write_text
 from utils.logger import create_logger
 
 logger = create_logger(name=__name__, level=logging.DEBUG)
+
+
+class ChessbotFrameUpdateResult(Enum):
+    OK = "OK"
+    NO_CHESSBOARD_FOUND = "NO_CHESSBOARD_FOUND"
+    NOT_QUADRILATERAL = "NOT_QUADRILATERAL"
+    NOT_RECTANGULAR_ENOUGH = "NOT_RECTANGULAR_ENOUGH"
+    OBSTRUCTED_SQUARES = "OBSTRUCTED_SQUARES"
 
 
 class Chessbot:
@@ -37,12 +46,14 @@ class Chessbot:
         diffs = find_chessboard_differences(cb, vb)
         self._move_heuristics.try_update_board(diffs)
 
-    def update(self, frame: np.ndarray) -> None:
+    def update(self, frame: np.ndarray) -> ChessbotFrameUpdateResult:
         """
         Update the chessbot with a new frame.
 
         :param frame: The frame to update the chessbot with, typically from a camera.
+        :return: The result of the update.
         """
+        update_result = ChessbotFrameUpdateResult.OK
         self._camera_preview = frame.copy()
 
         # Use ML model to segment the board
@@ -52,36 +63,46 @@ class Chessbot:
             cb_only = result.chessboard
             self._camera_preview = result.chessboard.copy()
         elif result.result_type == GetChessboardOnlyResultType.NO_CHESSBOARD_FOUND:
-            # TODO: Indicate this state back to the main program
             write_text(self._camera_preview, "No chessboard found", 10, 10)
+            update_result = ChessbotFrameUpdateResult.NO_CHESSBOARD_FOUND
         elif result.result_type == GetChessboardOnlyResultType.NOT_QUADRILATERAL:
             write_text(self._camera_preview, "Chessboard not quadrilateral", 10, 10)
+            update_result = ChessbotFrameUpdateResult.NOT_QUADRILATERAL
         elif result.result_type == GetChessboardOnlyResultType.NOT_RECTANGULAR_ENOUGH:
             write_text(self._camera_preview, "Chessboard not rectangular enough", 10,
                        10)
+            update_result = ChessbotFrameUpdateResult.NOT_RECTANGULAR_ENOUGH
 
         # Use ML model to classify each square and get a chessboard arrangement
         unknown_squares = None
         if cb_only is not None:
-            result = get_piece_matrix(cb_only, return_annotations=True)[0]
+            results = get_piece_matrix(cb_only, return_annotations=True)
+            # for i, r in enumerate(results):
+            #     print(
+            #         f"Chessboard detection result {i}: ({r.confidence})\n{r.pieces}\n")
+            result = results[0]
             self._camera_preview = result.annotation
             write_text(self._camera_preview, f"{result.confidence:.4f}", 10, 10)
-            # TODO: Try to update via pushing/popping moves instead of rewriting the
-            #  board. Check all top 5 [most] possible results to see if they result in
+            # TODO: Check all top 5 [most] possible results to see if they result in
             #  moves.
-            self._try_update_board_with_move(result)
+            try:
+                self._try_update_board_with_move(result)
+            except ValueError:
+                update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
+                logger.debug("Unknown square, assuming obstructed/bad camera angle")
             # unknown_squares = board_sync_from_chessboard_arrangement(self._board,
             #                                                          result.pieces)
             # print(result.pieces)
             # print(str(board) == str(result.pieces))
         else:
-            # TODO: Indicate this state back to the main program
             self._board.clear()
 
-        print(self._get_game_pgn_preview())
-
+        pgn = self._get_game_pgn_preview()
+        print(pgn)
         self._chessboard_preview = svg_to_numpy(
             chess.svg.board(self._board, squares=unknown_squares, size=512))
+
+        return update_result
 
     @property
     def camera_preview(self) -> np.ndarray:

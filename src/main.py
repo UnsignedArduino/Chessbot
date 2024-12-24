@@ -54,7 +54,8 @@ while True:
     frame = cam.capture_array()
     frame = cv2.flip(frame, 1)  # Flip horizontally
 
-    chessbot.update(frame)
+    result = chessbot.update(frame)
+    logger.debug(f"Chessbot frame update result: {result}")
 
     cam_preview = chessbot.camera_preview
     if debug_image_dir is not None:
