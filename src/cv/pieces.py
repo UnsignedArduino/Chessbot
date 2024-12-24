@@ -80,17 +80,22 @@ def get_piece_matrix(cb_only: np.ndarray,
 
             possible_pieces = list(zip([piece_model.names[i] for i in probs.top5],
                                        np.array(probs.top5conf)))
-            while sum(c for _, c in possible_pieces) > 0.9999 and len(
+            possible_to_save = []
+            # if possible_pieces[0][0] == "occluded":
+            #     print(possible_pieces)
+            while sum(c for _, c in possible_to_save) < 0.95 and len(
                     possible_pieces) > 1:
-                possible_pieces.pop()
+                possible_to_save.append(possible_pieces.pop(0))
             # print(
             #     f"({x}, {y}) = {[f"{p} {c * 100:.2f}" for p, c in possible_pieces]}")
-            possible_piece_arrangements.append(possible_pieces)
+            possible_piece_arrangements.append(possible_to_save)
 
             # if return_annotations:
             #     cv2.rectangle(annotation, (x0 + 4, y0 + 4), (x1 - 4, y1 - 4),
             #                   (colors[class_name][2], colors[class_name][1],
             #                    colors[class_name][0]), 4)
+
+    # pprint(possible_piece_arrangements)
 
     top_n = []
     for i, combination in enumerate(product(*possible_piece_arrangements)):

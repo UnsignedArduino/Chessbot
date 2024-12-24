@@ -1,4 +1,3 @@
-import tempfile
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -17,13 +16,17 @@ if args.directory is not None:
     target_directory = Path(args.directory)
     target_directory.mkdir(parents=True, exist_ok=True)
     print(f"Capturing images to {target_directory}")
-    tempfile.tempdir = target_directory
+
+file_idx = 1
 
 
 def save_np_image(image: np.ndarray):
-    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-        print(f"Saving to {tmp.name}")
-        cv2.imwrite(tmp.name, image)
+    global file_idx
+    new_path = str(
+        (target_directory / f"{file_idx:03}.jpg").expanduser().resolve())
+    print(f"Saving to {new_path}")
+    cv2.imwrite(new_path, image)
+    file_idx += 1
 
 
 cam = Picamera2()

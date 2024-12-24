@@ -31,3 +31,6 @@ run-main:
 
 run-main-scholars-mate-white-pov:
 	python src/main.py --debug-use-image-dir "test/scholars mate game white pov" --verbose
+
+run-main-test_castling-white-pov:
+	python src/main.py --debug-use-image-dir "test/test castling white pov" --verbose

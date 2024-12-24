@@ -74,33 +74,32 @@ class Chessbot:
             update_result = ChessbotFrameUpdateResult.NOT_RECTANGULAR_ENOUGH
 
         # Use ML model to classify each square and get a chessboard arrangement
-        unknown_squares = None
         if cb_only is not None:
             results = get_piece_matrix(cb_only, return_annotations=True)
             # for i, r in enumerate(results):
             #     print(
             #         f"Chessboard detection result {i}: ({r.confidence})\n{r.pieces}\n")
-            result = results[0]
-            self._camera_preview = result.annotation
-            write_text(self._camera_preview, f"{result.confidence:.4f}", 10, 10)
-            # TODO: Check all top 5 [most] possible results to see if they result in
-            #  moves.
-            try:
-                self._try_update_board_with_move(result)
-            except ValueError:
+            for i, result in enumerate(results):
+                # logger.debug(f"Trying update with possible result {i}")
+                self._camera_preview = result.annotation
+                write_text(self._camera_preview, f"{result.confidence:.4f}", 10, 10)
+                try:
+                    self._try_update_board_with_move(result)
+                except ValueError:
+                    logger.debug("Unknown square, assuming obstructed/bad camera angle")
+                else:
+                    break
+            else:
+                logger.warning(
+                    "No valid chessboard arrangement found for possible moves")
                 update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
-                logger.debug("Unknown square, assuming obstructed/bad camera angle")
-            # unknown_squares = board_sync_from_chessboard_arrangement(self._board,
-            #                                                          result.pieces)
-            # print(result.pieces)
-            # print(str(board) == str(result.pieces))
+                self._board.clear()
         else:
             self._board.clear()
 
         pgn = self._get_game_pgn_preview()
         print(pgn)
-        self._chessboard_preview = svg_to_numpy(
-            chess.svg.board(self._board, squares=unknown_squares, size=512))
+        self._chessboard_preview = svg_to_numpy(chess.svg.board(self._board, size=512))
 
         return update_result
 

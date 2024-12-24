@@ -113,6 +113,71 @@ class ChessbotMoveHeuristics:
 
         return None
 
+    def try_update_with_castle(self, differences: list[ChessboardDifference]) -> \
+            Optional[
+                chess.Move]:
+        """
+        If the differences represent a castle, update the board with the castle.
+
+        :param differences: A list of differences.
+        :return: The move if the differences represent a castle, otherwise None.
+        """
+        logger.debug("Trying to update as castle")
+
+        # Single castle must be four differences
+        if len(differences) != 4:
+            logger.debug(f"Expected 4 differences to update as castle, got "
+                         f"{len(differences)}")
+            return None
+
+        try:
+            # Must be two removes and two adds, throws IndexError otherwise
+            king_removal = list(filter(lambda
+                                           x: x.type == ChessboardDifferenceType.REMOVE and x.piece.piece_type == chess.KING,
+                                       differences))[0]
+            king_addition = list(filter(lambda
+                                            x: x.type == ChessboardDifferenceType.ADD and x.piece.piece_type == chess.KING,
+                                        differences))[0]
+            rook_removal = list(filter(lambda
+                                           x: x.type == ChessboardDifferenceType.REMOVE and x.piece.piece_type == chess.ROOK,
+                                       differences))[0]
+            rook_addition = list(filter(lambda
+                                            x: x.type == ChessboardDifferenceType.ADD and x.piece.piece_type == chess.ROOK,
+                                        differences))[0]
+
+            # All differences must be the same color
+            def all_colors_same(ds: list[ChessboardDifference]) -> bool:
+                return all(x.piece.color == ds[0].piece.color for x in ds)
+
+            if not all_colors_same(
+                    [king_removal, king_addition, rook_removal, rook_addition]):
+                logger.debug("Expected same color to update as castle")
+                return None
+
+            # All differences must be on the same rank
+            def all_ranks_same(ds: list[ChessboardDifference]) -> bool:
+                return all(
+                    chess.square_rank(x.square) == chess.square_rank(ds[0].square) for x
+                    in ds)
+
+            if not all_ranks_same(
+                    [king_removal, king_addition, rook_removal, rook_addition]):
+                logger.debug("Expected same rank to update as castle")
+                return None
+
+            # Must be a legal move
+            move = self._board.find_move(king_removal.square, king_addition.square)
+            logger.debug(f"Found move {move}")
+            self._board.push(move)
+
+            return move
+        except IndexError:
+            logger.debug("Expected two removes and two adds to update as castle")
+        except chess.IllegalMoveError:
+            logger.debug("Expected legal move to update as castle")
+
+        return None
+
     def try_update_board(self, differences: list[ChessboardDifference]):
         """
         Try to update the board with the given differences.
@@ -126,4 +191,6 @@ class ChessbotMoveHeuristics:
             return
         if self.try_update_with_capture(differences) is not None:
             return
-        # TODO: Handle promotion, castling, en passant
+        if self.try_update_with_castle(differences) is not None:
+            return
+        # TODO: Handle promotion, en passant
