@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 
 import chess
+import chess.engine
 import chess.pgn
 import chess.svg
 import numpy as np
@@ -13,6 +14,7 @@ from utils.chess_stuff import board_sync_from_chessboard_arrangement, \
     find_chessboard_differences
 # from utils.chess_stuff import board_sync_from_chessboard_arrangement
 from utils.cv2_stuff import svg_to_numpy, write_text
+from utils.engine_stuff import find_stockfish_binary
 from utils.logger import create_logger
 
 logger = create_logger(name=__name__, level=logging.DEBUG)
@@ -32,10 +34,29 @@ class Chessbot:
         self._board = chess.Board()
         self._move_heuristics = ChessbotMoveHeuristics(self._board)
 
+        sf_path = find_stockfish_binary()
+        if sf_path is not None:
+            logger.debug(f"Using stockfish binary at {sf_path}")
+            self._engine = chess.engine.SimpleEngine.popen_uci(str(sf_path))
+        else:
+            logger.warning("Could not find stockfish binary, engine will not be used")
+            self._engine = None
+
         self._camera_preview = None
         self._chessboard_preview = None
 
         logger.debug("Chessbot created")
+
+    def quit(self):
+        """
+        Quit the chessbot and release all resources.
+        """
+        if self._engine is not None:
+            self._engine.close()
+            logger.debug("Chessbot engine quit")
+        else:
+            logger.debug("Chessbot engine not used, nothing to quit")
+        logger.debug("Chessbot destroyed")
 
     def _get_game_pgn_preview(self) -> str:
         pgn_game = chess.pgn.Game.from_board(self._board)
@@ -111,7 +132,12 @@ class Chessbot:
                         update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
 
         pgn = self._get_game_pgn_preview()
-        print(f"PGN: {pgn}\nOutcome: {self._board.outcome()}")
+        info = self._engine.analyse(self._board, chess.engine.Limit(time=0.5))
+        print(pgn)
+        print(f"{info['score']} (depth {info['depth']} seldepth {info['seldepth']} "
+              f"time {info['time']} nodes {info['nodes']} nps {info['nps']})")
+        if self._board.outcome() is not None:
+            print(f"{self._board.outcome()}")
 
         # Find the last move and highlight it
         last_move = self._board.peek() if len(self._board.move_stack) > 0 else None

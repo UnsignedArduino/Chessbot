@@ -12,6 +12,9 @@ on a monitor.
 3. Use Python 3.11, at the time of writing some of the used packages are not
    compatible with Python 3.12.
 4. Clone this repo.
+5. Install [Stockfish](https://stockfishchess.org/) either with by downloading
+   from the website or using `sudo apt install stockfish` on the Pi. (although
+   it is several major versions behind it is better than compiling it)
 
 There is an (untested) [`Makefile`](Makefile) available which performs the
 rest of the installation steps. For the Pi, run `make install-for-pi` and for
@@ -101,9 +104,9 @@ numbers. (e.g. `01.png`, `02.png`, ...) Use <kbd>w</kbd> or <kbd>d</kbd> to
 advance to the next image, and <kbd>s</kbd> or <kbd>a</kbd> to go to the
 previous image. <kbd>q</kbd> to quit.
 
-You can use the `--debug-play-image-dir` flag alongside the 
-`--debug-use-image-dir` flag to play the specified directory of images, like a 
-slideshow, in order to save some key pressing. Click any key in order to stop 
+You can use the `--debug-play-image-dir` flag alongside the
+`--debug-use-image-dir` flag to play the specified directory of images, like a
+slideshow, in order to save some key pressing. Click any key in order to stop
 the "slideshow".
 
 You can capture your own image on the Raspberry Pi with a Picamera and
@@ -114,5 +117,5 @@ transfer it to your computer to be used with
 python src/train/test_camera.py  -d "/home/pi/Chessbot/test/new test"
 ```
 
-Press <kbd>c</kbd> to save a numbered image to the directory specified with 
+Press <kbd>c</kbd> to save a numbered image to the directory specified with
 `-d`. (It will start with `001.jpg`, then `002.jpg`, etc.)
