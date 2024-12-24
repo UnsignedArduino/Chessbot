@@ -132,10 +132,10 @@ class Chessbot:
                         update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
 
         pgn = self._get_game_pgn_preview()
-        info = self._engine.analyse(self._board, chess.engine.Limit(time=0.5))
         print(pgn)
-        print(f"{info['score']} (depth {info['depth']} seldepth {info['seldepth']} "
-              f"time {info['time']} nodes {info['nodes']} nps {info['nps']})")
+        # info = self._engine.analyse(self._board, chess.engine.Limit(time=0.5))
+        # score = info['score']
+        # print(f"{score}")
         if self._board.outcome() is not None:
             print(f"{self._board.outcome()}")
 
