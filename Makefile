@@ -30,7 +30,10 @@ run-main:
 	python src/main.py --verbose
 
 run-main-scholars-mate-white-pov:
-	python src/main.py --debug-use-image-dir "test/scholars mate game white pov" --verbose
+	python src/main.py --debug-use-image-dir "test/scholars mate game white pov" --debug-play-image-dir --verbose
 
 run-main-test-castling-white-pov:
-	python src/main.py --debug-use-image-dir "test/test castling white pov" --verbose
+	python src/main.py --debug-use-image-dir "test/test castling white pov" --debug-play-image-dir --verbose
+
+run-main-test-white-promotion-white-pov:
+	python src/main.py --debug-use-image-dir "test/test white promotion white pov" --debug-play-image-dir --verbose
