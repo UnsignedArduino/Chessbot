@@ -73,6 +73,7 @@ class Chessbot:
             update_result = ChessbotFrameUpdateResult.NOT_RECTANGULAR_ENOUGH
 
         # Use ML model to classify each square and get a chessboard arrangement
+        move = None
         if cb_only is not None:
             results = get_piece_matrix(cb_only, return_annotations=True)
             # for i, r in enumerate(results):
@@ -93,12 +94,12 @@ class Chessbot:
                             logger.debug("No differences in board found, skipping")
                             update_result = ChessbotFrameUpdateResult.NO_CHANGE
                             break
-                        m = self._move_heuristics.try_update_board(diffs)
+                        move = self._move_heuristics.try_update_board(diffs)
                     except ValueError:
                         logger.debug(
                             "Unknown square, assuming obstructed/bad camera angle")
                     else:
-                        if m is not None:
+                        if move is not None:
                             break
                         else:
                             logger.debug(
@@ -110,8 +111,28 @@ class Chessbot:
                         update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
 
         pgn = self._get_game_pgn_preview()
-        print(pgn)
-        self._chessboard_preview = svg_to_numpy(chess.svg.board(self._board, size=512))
+        print(f"PGN: {pgn}\nOutcome: {self._board.outcome()}")
+
+        # Find the last move and highlight it
+        last_move = self._board.peek() if len(self._board.move_stack) > 0 else None
+        # Find which king is in check
+        fill = {}
+        checkers = self._board.checkers()
+        check_square = None
+        if checkers:
+            # Get a piece that is checking the king (although multiple checkers are
+            # possible, they should all be the same color)
+            a_checking_piece = self._board.piece_at(checkers.pop())
+            side_in_check = not a_checking_piece.color
+            # Get the king that is in check
+            check_square = self._board.king(side_in_check)
+            fill[check_square] = "#CC0000CC"
+        self._chessboard_preview = svg_to_numpy(
+            chess.svg.board(self._board, size=512, lastmove=last_move,
+                            # check=check_square  # svglib does not like the gradient used for check
+                            # so we use fill
+                            fill=fill)
+        )
 
         return update_result
 
