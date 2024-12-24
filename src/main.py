@@ -58,6 +58,12 @@ else:
 
 chessbot = Chessbot()
 
+# For testing
+# cam.image_index = 94  # start on white a couple before promotion
+# frame = cam.capture_array()
+# frame = cv2.flip(frame, 1)  # Flip horizontally
+# chessbot.update(frame, force_board_sync=True)
+
 while True:
     frame = cam.capture_array()
     frame = cv2.flip(frame, 1)  # Flip horizontally

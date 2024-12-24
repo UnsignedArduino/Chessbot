@@ -178,19 +178,107 @@ class ChessbotMoveHeuristics:
 
         return None
 
-    def try_update_board(self, differences: list[ChessboardDifference]):
+    def try_update_with_promotion(self, differences: list[ChessboardDifference]) -> \
+            Optional[
+                chess.Move]:
+        """
+        If the differences represent a promotion, update the board with the promotion.
+
+        :param differences: A list of differences.
+        :return: The move if the differences represent a promotion, otherwise None.
+        """
+        logger.debug("Trying to update as promotion")
+
+        # Single promotion must be two differences
+        if len(differences) != 2:
+            logger.debug(f"Expected 2 differences to update as promotion, got "
+                         f"{len(differences)}")
+            return None
+
+        try:
+            # Must be one add and one remove, throws IndexError otherwise
+            removal: ChessboardDifference = \
+                list(filter(lambda x: x.type == ChessboardDifferenceType.REMOVE,
+                            differences))[0]
+            addition: ChessboardDifference = \
+                list(filter(lambda x: x.type == ChessboardDifferenceType.ADD,
+                            differences))[0]
+
+            # Removed piece must be a pawn
+            if removal.piece.piece_type != chess.PAWN:
+                logger.debug("Expected pawn to update as promotion")
+                return None
+
+            # Added piece must be a promotable piece
+            if addition.piece.piece_type not in [chess.QUEEN, chess.ROOK, chess.BISHOP,
+                                                 chess.KNIGHT]:
+                logger.debug("Expected promotable piece to update as promotion")
+                return None
+
+            # Both must be the same color
+            if removal.piece.color != addition.piece.color:
+                logger.debug("Expected same color to update as promotion")
+                return None
+
+            # If the pieces are white, the addition must be on the 8th rank
+            if removal.piece.color == chess.WHITE and chess.square_rank(
+                    addition.square) != 7:
+                logger.debug("Expected 8th rank to update as promotion")
+                return None
+            # and the removal must be on the 7th rank
+            if removal.piece.color == chess.WHITE and chess.square_rank(
+                    removal.square) != 6:
+                logger.debug("Expected 7th rank to update as promotion")
+                return None
+
+            # If the pieces are black, the addition must be on the 1st rank
+            if removal.piece.color == chess.BLACK and chess.square_rank(
+                    addition.square) != 0:
+                logger.debug("Expected 1st rank to update as promotion")
+                return None
+            # and the removal must be on the 2nd rank
+            if removal.piece.color == chess.BLACK and chess.square_rank(
+                    removal.square) != 1:
+                logger.debug("Expected 2nd rank to update as promotion")
+                return None
+
+            # Since this promotion isn't also a capture, the addition and removal must
+            # be on the same file
+            if chess.square_file(removal.square) != chess.square_file(addition.square):
+                logger.debug("Expected same file to update as promotion")
+                return None
+
+            # Must be a legal move
+            move = self._board.find_move(removal.square, addition.square)
+            logger.debug(f"Found move {move}")
+            self._board.push(move)
+
+            return move
+        except IndexError:
+            logger.debug("Expected one add and one remove to update as promotion")
+        except chess.IllegalMoveError:
+            logger.debug("Expected legal move to update as promotion")
+
+        return None
+
+    def try_update_board(self, differences: list[ChessboardDifference]) -> Optional[
+        chess.Move]:
         """
         Try to update the board with the given differences.
 
         :param differences: A list of differences.
+        :return: The move if the board was updated, otherwise None.
         """
         if len(differences) == 0:
             return
         pprint(differences)
-        if self.try_update_with_move(differences) is not None:
-            return
-        if self.try_update_with_capture(differences) is not None:
-            return
-        if self.try_update_with_castle(differences) is not None:
-            return
-        # TODO: Handle promotion, en passant
+        if (move := self.try_update_with_move(differences)) is not None:
+            return move
+        if (move := self.try_update_with_capture(differences)) is not None:
+            return move
+        if (move := self.try_update_with_castle(differences)) is not None:
+            return move
+        if (move := self.try_update_with_promotion(differences)) is not None:
+            return move
+        # TODO: Handle capturing promotion, en passant
+        return None
