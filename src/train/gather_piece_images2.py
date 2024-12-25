@@ -1,18 +1,16 @@
 import sys
 from pathlib import Path
 
-from tqdm import trange
-
 sys.path.append(str(Path.cwd() / "src"))
 
 import tempfile
-
 from argparse import ArgumentParser
 from tempfile import NamedTemporaryFile
 
 import cv2
 import numpy as np
 from shapely import Polygon
+from tqdm import trange
 from ultralytics import YOLO
 
 from utils.cv2_stuff import crop_and_reshape_to_square, draw_polygon, \
