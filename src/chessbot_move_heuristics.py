@@ -46,7 +46,6 @@ class ChessbotMoveHeuristics:
                 logger.debug("Expected same piece to update as move")
                 return None
 
-            # TODO: If promotion bail, other function should handle it
             # Must be a legal move
             move = self._board.find_move(removal.square, addition.square)
             logger.debug(f"Found move {move}")
@@ -99,7 +98,6 @@ class ChessbotMoveHeuristics:
                 logger.debug("Expected different color to update as capture")
                 return None
 
-            # TODO: If promotion bail, other function should handle it
             # Must be a legal move
             move = self._board.find_move(removal_capturing.square, addition.square)
             logger.debug(f"Found move {move}")
@@ -376,15 +374,15 @@ class ChessbotMoveHeuristics:
         if len(differences) == 0:
             return
         pprint(differences)
-        if (move := self.try_update_with_move(differences)) is not None:
-            return move
-        if (move := self.try_update_with_capture(differences)) is not None:
-            return move
-        if (move := self.try_update_with_castle(differences)) is not None:
+        if (move := self.try_update_with_capturing_promotion(differences)) is not None:
             return move
         if (move := self.try_update_with_promotion(differences)) is not None:
             return move
-        if (move := self.try_update_with_capturing_promotion(differences)) is not None:
+        if (move := self.try_update_with_castle(differences)) is not None:
+            return move
+        if (move := self.try_update_with_capture(differences)) is not None:
+            return move
+        if (move := self.try_update_with_move(differences)) is not None:
             return move
         # TODO: Handle en passant
         return None
