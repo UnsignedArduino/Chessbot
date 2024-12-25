@@ -60,7 +60,8 @@ model is working correctly.
 [![Train on Colab](https://img.shields.io/badge/-Train_on_Colab-gray?logo=googlecolab&logoColor=%23F9AB00&labelColor=gray&color=blue)](https://colab.research.google.com/github/UnsignedArduino/Chessbot/blob/main/src/train/train_piece_classification.ipynb)
 
 After configuring your dataset on Roboflow, use
-[`gather_piece_images.py`](src/train/gather_piece_images.py) to gather board
+[`gather_piece_images.py`](src/train/gather_piece_images.py) or
+[`gather_piece_images2.py`](src/train/gather_piece_images2.py) to gather board
 images. Upload the directory to Roboflow. Afterward, create a dataset version
 and train with
 [
