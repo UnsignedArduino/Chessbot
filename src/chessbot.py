@@ -26,6 +26,7 @@ class ChessbotFrameUpdateResult(Enum):
     NOT_QUADRILATERAL = "NOT_QUADRILATERAL"
     NOT_RECTANGULAR_ENOUGH = "NOT_RECTANGULAR_ENOUGH"
     OBSTRUCTED_SQUARES = "OBSTRUCTED_SQUARES"
+    ILLEGAL_MOVE = "ILLEGAL_MOVE"
     NO_CHANGE = "NO_CHANGE"
 
 
@@ -94,7 +95,6 @@ class Chessbot:
             update_result = ChessbotFrameUpdateResult.NOT_RECTANGULAR_ENOUGH
 
         # Use ML model to classify each square and get a chessboard arrangement
-        move = None
         if cb_only is not None:
             results = get_piece_matrix(cb_only, top_n_confident=10,
                                        return_annotations=True)
@@ -120,17 +120,14 @@ class Chessbot:
                     except ValueError:
                         logger.debug(
                             "Unknown square, assuming obstructed/bad camera angle")
+                        update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
                     else:
                         if move is not None:
                             break
                         else:
                             logger.debug(
                                 "Could not find legal move, trying next result")
-                else:
-                    if update_result != ChessbotFrameUpdateResult.NO_CHANGE:
-                        logger.warning(
-                            "No valid chessboard arrangement found for possible moves")
-                        update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
+                            update_result = ChessbotFrameUpdateResult.ILLEGAL_MOVE
 
         pgn = self._get_game_pgn_preview()
         print(pgn)

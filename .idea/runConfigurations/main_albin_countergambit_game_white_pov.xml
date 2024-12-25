@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="main test black non-queen promotion white pov" type="PythonConfigurationType" factoryName="Python">
+  <configuration default="false" name="main albin countergambit game white pov" type="PythonConfigurationType" factoryName="Python">
     <module name="Chessbot" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
@@ -14,7 +14,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
-    <option name="PARAMETERS" value="--debug-use-image-dir &quot;test/test black non-queen promotion white pov&quot; --debug-play-image-dir --verbose" />
+    <option name="PARAMETERS" value="--debug-use-image-dir &quot;test/albin countergambit game white pov&quot; --debug-play-image-dir --verbose" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
