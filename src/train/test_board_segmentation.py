@@ -4,12 +4,7 @@ import cv2
 from picamera2 import Picamera2
 from ultralytics import YOLO
 
-model_path = Path.cwd() / "src" / "models" / "board_segmentation_best.pt"
 ncnn_path = Path.cwd() / "src" / "models" / "board_segmentation_best_ncnn_model"
-
-if not ncnn_path.exists():
-    model = YOLO(model_path)
-    model.export(format="ncnn")
 
 model = YOLO(ncnn_path, task="segment")
 

@@ -13,22 +13,10 @@ from ultralytics import YOLO
 from utils.cv2_stuff import crop_and_reshape_to_square, write_text
 from utils.math_stuff import find_closest_to_right_angles
 
-board_segment_model_path = Path.cwd() / "src" / "models" / "board_segmentation_best.pt"
 board_segment_ncnn_path = Path.cwd() / "src" / "models" / "board_segmentation_best_ncnn_model"
-
-piece_classify_model_path = Path.cwd() / "src" / "models" / "piece_classification_best.pt"
 piece_classify_ncnn_path = Path.cwd() / "src" / "models" / "piece_classification_best_ncnn_model"
 
-if not board_segment_ncnn_path.exists():
-    board_model = YOLO(board_segment_model_path)
-    board_model.export(format="ncnn")
-
 board_model = YOLO(board_segment_ncnn_path, task="segment")
-
-if not piece_classify_ncnn_path.exists():
-    piece_model = YOLO(piece_classify_model_path)
-    piece_model.export(format="ncnn")
-
 piece_model = YOLO(piece_classify_ncnn_path, task="classify")
 
 cam = Picamera2()

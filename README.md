@@ -48,10 +48,9 @@ directory and rename it to
 [`board_segmentation_best.pt`](src/models/board_segmentation_best.pt).
 
 Afterward, run
-[`test_board_segmentation.py`](src/train/test_board_segmentation.py). This step
-is necessary as it exports the model to NCNN format. It will also preview
-inference results on the live camera feed, which can be used to ensure the
-model is working correctly.
+[`export_board_segmentation.py`](src/train/export_board_segmentation.py). This
+will export the model to NCNN format. To preview, run
+[`test_board_segmentation.py`](src/train/test_board_segmentation.py).
 
 #### Training pieces classification
 
@@ -71,11 +70,9 @@ directory and rename it to
 [`piece_classification_best.pt`](src/models/piece_classification_best.pt).
 
 Afterward, run
-[`test_piece_classification.py`](src/train/test_piece_classification.py). This
-step
-is necessary as it exports the model to NCNN format. It will also preview
-inference results on the live camera feed, which can be used to ensure the
-model is working correctly.
+[`export_piece_classification.py`](src/train/export_piece_classification.py).
+This will export the model to NCNN format. To preview, run
+[`test_piece_classification.py`](src/train/test_piece_classification.py).
 
 ## Usage
 
