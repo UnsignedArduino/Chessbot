@@ -262,6 +262,109 @@ class ChessbotMoveHeuristics:
 
         return None
 
+    def try_update_with_capturing_promotion(self,
+                                            differences: list[ChessboardDifference]) -> \
+            Optional[chess.Move]:
+        """
+        If the differences represent a promotion and a capture, update the board with the promotion and capture.
+
+        :param differences: A list of differences.
+        :return: The move if the differences represent a promotion and capture, otherwise None.
+        """
+        logger.debug("Trying to update as capturing promotion")
+
+        # Single capturing promotion must be three differences
+        if len(differences) != 3:
+            logger.debug(
+                f"Expected 3 differences to update as capturing promotion, got "
+                f"{len(differences)}")
+            return None
+
+        try:
+            # Must be two removals and one add, throws IndexError otherwise
+            removals = list(filter(lambda x: x.type == ChessboardDifferenceType.REMOVE,
+                                   differences))
+            promoted = list(filter(lambda x: x.type == ChessboardDifferenceType.ADD,
+                                   differences))[0]
+            removal_capturing = \
+                list(filter(lambda x: x.piece.color == promoted.piece.color, removals))[
+                    0]
+            removal_captured = \
+                list(filter(lambda x: x.piece.color == (not promoted.piece.color),
+                            removals))[0]
+
+            # The removed capturing piece must be a pawn
+            if removal_capturing.piece.piece_type != chess.PAWN:
+                logger.debug("Expected pawn to update as capturing promotion")
+                return None
+
+            # The added piece must be a promotable piece
+            if promoted.piece.piece_type not in [chess.QUEEN, chess.ROOK, chess.BISHOP,
+                                                 chess.KNIGHT]:
+                logger.debug(
+                    "Expected promotable piece to update as capturing promotion")
+                return None
+
+            # The removed capturing piece and the added piece must be the same color
+            if removal_capturing.piece.color != promoted.piece.color:
+                logger.debug("Expected same color to update as capturing promotion")
+                return None
+
+            # The removed captured piece must be a different color
+            if removal_captured.piece.color == promoted.piece.color:
+                logger.debug(
+                    "Expected different color to update as capturing promotion")
+                return None
+
+            # If the pieces are white, the added piece and removed captured piece must
+            # be on the 8th rank
+            if promoted.piece.color == chess.WHITE and chess.square_rank(
+                    promoted.square) != 7 and chess.square_rank(
+                removal_captured.square) != 7:
+                logger.debug("Expected 8th rank to update as capturing promotion")
+                return None
+            # and the removed capturing piece must be on the 7th rank
+            if promoted.piece.color == chess.WHITE and chess.square_rank(
+                    removal_capturing.square) != 6:
+                logger.debug("Expected 7th rank to update as capturing promotion")
+                return None
+
+            # If the pieces are black, the added piece and removed captured piece must
+            # be on the 1st rank
+            if promoted.piece.color == chess.BLACK and chess.square_rank(
+                    promoted.square) != 0 and chess.square_rank(
+                removal_captured.square) != 0:
+                logger.debug("Expected 1st rank to update as capturing promotion")
+                return None
+            # and the removed capturing piece must be on the 2nd rank
+            if promoted.piece.color == chess.BLACK and chess.square_rank(
+                    removal_capturing.square) != 1:
+                logger.debug("Expected 2nd rank to update as capturing promotion")
+                return None
+
+            # Since this promotion is also a capture, the added piece and removed
+            # captured piece must be off by one file
+            if abs(chess.square_file(promoted.square) - chess.square_file(
+                    removal_capturing.square)) != 1:
+                logger.debug(
+                    "Expected off by one file to update as capturing promotion")
+                return None
+
+            # Must be a legal move
+            move = self._board.find_move(removal_capturing.square, promoted.square,
+                                         promoted.piece.piece_type)
+            logger.debug(f"Found move {move}")
+            self._board.push(move)
+
+            return move
+        except IndexError:
+            logger.debug(
+                "Expected two removes and one add to update as capturing promotion")
+        except chess.IllegalMoveError:
+            logger.debug("Expected legal move to update as capturing promotion")
+
+        return None
+
     def try_update_board(self, differences: list[ChessboardDifference]) -> Optional[
         chess.Move]:
         """
@@ -281,5 +384,7 @@ class ChessbotMoveHeuristics:
             return move
         if (move := self.try_update_with_promotion(differences)) is not None:
             return move
-        # TODO: Handle capturing promotion, en passant
+        if (move := self.try_update_with_capturing_promotion(differences)) is not None:
+            return move
+        # TODO: Handle en passant
         return None
