@@ -363,6 +363,101 @@ class ChessbotMoveHeuristics:
 
         return None
 
+    def try_update_with_en_passant(self, differences: list[ChessboardDifference]) -> \
+            Optional[
+                chess.Move]:
+        """
+        If the differences represent an en passant, update the board with the en passant.
+
+        :param differences: A list of differences.
+        :return: The move if the differences represent an en passant, otherwise None.
+        """
+        logger.debug("Trying to update as en passant")
+
+        # Single en passant must be three differences
+        if len(differences) != 3:
+            logger.debug(f"Expected 3 differences to update as en passant, got "
+                         f"{len(differences)}")
+            return None
+
+        try:
+            # Must be two removes and one add, throws IndexError otherwise
+            removals = list(filter(lambda x: x.type == ChessboardDifferenceType.REMOVE,
+                                   differences))
+            addition = list(filter(lambda x: x.type == ChessboardDifferenceType.ADD,
+                                   differences))[0]
+            removal_captured = \
+            list(filter(lambda x: x.piece.color == (not addition.piece.color),
+                        removals))[0]
+            removal_capturing = \
+            list(filter(lambda x: x.piece.color == addition.piece.color,
+                        removals))[0]
+
+            # All the differences must be pawns
+            if not all(x.piece.piece_type == chess.PAWN for x in
+                       [removal_captured, removal_capturing, addition]):
+                logger.debug("Expected all pawns to update as en passant")
+                return None
+
+            # If the "en passanted" pawn is black, both removals must be on the 5th rank
+            if removal_captured.piece.color == chess.BLACK and (chess.square_rank(
+                    removal_captured.square) != 4 or chess.square_rank(
+                    removal_capturing.square) != 4):
+                logger.debug("Expected 5th rank to update as en passant")
+                return None
+            # and the addition must be on the 6th rank
+            if removal_captured.piece.color == chess.BLACK and chess.square_rank(
+                    addition.square) != 5:
+                logger.debug("Expected 6th rank to update as en passant")
+                return None
+
+            # If the "en passanted" pawn is white, both removals must be on the 4th rank
+            if removal_captured.piece.color == chess.WHITE and (chess.square_rank(
+                    removal_captured.square) != 3 or chess.square_rank(
+                    removal_capturing.square) != 3):
+                logger.debug("Expected 4th rank to update as en passant")
+                return None
+            # and the addition must be on the 3rd rank
+            if removal_captured.piece.color == chess.WHITE and chess.square_rank(
+                    addition.square) != 2:
+                logger.debug("Expected 3rd rank to update as en passant")
+                return None
+
+            # The addition and the capturing piece must be the same
+            if addition.piece != removal_capturing.piece:
+                logger.debug("Expected same piece to update as en passant")
+                return None
+
+            # The captured piece must be a different color
+            if addition.piece.color == removal_captured.piece.color:
+                logger.debug("Expected different color to update as en passant")
+                return None
+
+            # The addition and the captured piece must be on the same file
+            if chess.square_file(addition.square) != chess.square_file(
+                    removal_captured.square):
+                logger.debug("Expected same file to update as en passant")
+                return None
+
+            # The capturing piece must have come from an adjacent file
+            if abs(chess.square_file(removal_capturing.square) - chess.square_file(
+                    addition.square)) != 1:
+                logger.debug("Expected adjacent file to update as en passant")
+                return None
+
+            # Must be a legal move
+            move = self._board.find_move(removal_capturing.square, addition.square)
+            logger.debug(f"Found move {move}")
+            self._board.push(move)
+
+            return move
+        except IndexError:
+            logger.debug("Expected two removes and one add to update as en passant")
+        except chess.IllegalMoveError:
+            logger.debug("Expected legal move to update as en passant")
+
+        return None
+
     def try_update_board(self, differences: list[ChessboardDifference]) -> Optional[
         chess.Move]:
         """
@@ -380,9 +475,10 @@ class ChessbotMoveHeuristics:
             return move
         if (move := self.try_update_with_castle(differences)) is not None:
             return move
+        if (move := self.try_update_with_en_passant(differences)) is not None:
+            return move
         if (move := self.try_update_with_capture(differences)) is not None:
             return move
         if (move := self.try_update_with_move(differences)) is not None:
             return move
-        # TODO: Handle en passant
         return None
