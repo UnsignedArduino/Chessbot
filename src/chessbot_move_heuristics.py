@@ -1,5 +1,4 @@
 import logging
-from pprint import pprint
 from typing import Optional
 
 import chess
@@ -387,11 +386,11 @@ class ChessbotMoveHeuristics:
             addition = list(filter(lambda x: x.type == ChessboardDifferenceType.ADD,
                                    differences))[0]
             removal_captured = \
-            list(filter(lambda x: x.piece.color == (not addition.piece.color),
-                        removals))[0]
+                list(filter(lambda x: x.piece.color == (not addition.piece.color),
+                            removals))[0]
             removal_capturing = \
-            list(filter(lambda x: x.piece.color == addition.piece.color,
-                        removals))[0]
+                list(filter(lambda x: x.piece.color == addition.piece.color,
+                            removals))[0]
 
             # All the differences must be pawns
             if not all(x.piece.piece_type == chess.PAWN for x in
@@ -402,7 +401,7 @@ class ChessbotMoveHeuristics:
             # If the "en passanted" pawn is black, both removals must be on the 5th rank
             if removal_captured.piece.color == chess.BLACK and (chess.square_rank(
                     removal_captured.square) != 4 or chess.square_rank(
-                    removal_capturing.square) != 4):
+                removal_capturing.square) != 4):
                 logger.debug("Expected 5th rank to update as en passant")
                 return None
             # and the addition must be on the 6th rank
@@ -414,7 +413,7 @@ class ChessbotMoveHeuristics:
             # If the "en passanted" pawn is white, both removals must be on the 4th rank
             if removal_captured.piece.color == chess.WHITE and (chess.square_rank(
                     removal_captured.square) != 3 or chess.square_rank(
-                    removal_capturing.square) != 3):
+                removal_capturing.square) != 3):
                 logger.debug("Expected 4th rank to update as en passant")
                 return None
             # and the addition must be on the 3rd rank
@@ -468,7 +467,7 @@ class ChessbotMoveHeuristics:
         """
         if len(differences) == 0:
             return
-        pprint(differences)
+        # pprint(differences)
         if (move := self.try_update_with_capturing_promotion(differences)) is not None:
             return move
         if (move := self.try_update_with_promotion(differences)) is not None:

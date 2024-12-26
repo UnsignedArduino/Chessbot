@@ -1,8 +1,6 @@
 import sys
 from pathlib import Path
 
-from utils.cv2_stuff import write_text
-
 sys.path.append(str(Path.cwd() / "src"))
 
 import logging
@@ -11,6 +9,7 @@ from argparse import ArgumentParser
 import cv2
 
 from chessbot import Chessbot
+from utils.cv2_stuff import write_text
 from utils.logger import create_logger, set_all_stdout_logger_levels
 
 logger = create_logger(name=__name__, level=logging.DEBUG)

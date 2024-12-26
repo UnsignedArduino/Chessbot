@@ -64,6 +64,27 @@ class Chessbot:
         exporter = chess.pgn.StringExporter(headers=False)
         return pgn_game.accept(exporter)
 
+    def _get_chessboard_preview(self) -> np.ndarray:
+        # Find the last move and highlight it
+        last_move = self._board.peek() if len(self._board.move_stack) > 0 else None
+        # Find which king is in check
+        fill = {}
+        checkers = self._board.checkers()
+        if checkers:
+            # Get a piece that is checking the king (although multiple checkers are
+            # possible, they should all be the same color)
+            a_checking_piece = self._board.piece_at(checkers.pop())
+            side_in_check = not a_checking_piece.color
+            # Get the king that is in check
+            check_square = self._board.king(side_in_check)
+            fill[check_square] = "#CC0000CC"
+        return svg_to_numpy(
+            chess.svg.board(self._board, size=512, lastmove=last_move,
+                            # check=check_square  # svglib does not like the gradient used for check
+                            # so we use fill
+                            fill=fill)
+        )
+
     def update(self, frame: np.ndarray,
                force_board_sync: bool = False) -> ChessbotFrameUpdateResult:
         """
@@ -137,25 +158,7 @@ class Chessbot:
         if self._board.outcome() is not None:
             print(f"{self._board.outcome()}")
 
-        # Find the last move and highlight it
-        last_move = self._board.peek() if len(self._board.move_stack) > 0 else None
-        # Find which king is in check
-        fill = {}
-        checkers = self._board.checkers()
-        if checkers:
-            # Get a piece that is checking the king (although multiple checkers are
-            # possible, they should all be the same color)
-            a_checking_piece = self._board.piece_at(checkers.pop())
-            side_in_check = not a_checking_piece.color
-            # Get the king that is in check
-            check_square = self._board.king(side_in_check)
-            fill[check_square] = "#CC0000CC"
-        self._chessboard_preview = svg_to_numpy(
-            chess.svg.board(self._board, size=512, lastmove=last_move,
-                            # check=check_square  # svglib does not like the gradient used for check
-                            # so we use fill
-                            fill=fill)
-        )
+        self._chessboard_preview = self._get_chessboard_preview()
 
         return update_result
 
