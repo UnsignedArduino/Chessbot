@@ -12,8 +12,8 @@ logger = create_logger(name=__name__, level=logging.DEBUG)
 class ChessbotMoveHeuristics:
     def __init__(self, board: chess.Board):
         self._board = board
-
         logger.debug("ChessbotMoveHeuristics created")
+        logger.setLevel(logging.INFO)
 
     def try_update_with_move(self, differences: list[ChessboardDifference]) -> Optional[
         chess.Move]:

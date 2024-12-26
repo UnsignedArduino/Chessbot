@@ -123,40 +123,40 @@ class Chessbot:
             #     print(
             #         f"Chessboard detection result {i}: ({r.confidence})\n{r.pieces}\n")
             if force_board_sync:
-                logger.info("Forcing board sync from chessboard arrangement")
+                # logger.info("Forcing board sync from chessboard arrangement")
                 board_sync_from_chessboard_arrangement(self._board, results[0].pieces)
             else:
                 for i, result in enumerate(results):
-                    logger.debug(f"Trying update with possible result {i}")
+                    # logger.debug(f"Trying update with possible result {i}")
                     self._camera_preview = result.annotation
                     write_text(self._camera_preview, f"{result.confidence:.4f}", 10, 10)
                     try:
                         diffs = find_chessboard_differences(str(self._board),
                                                             result.pieces)
                         if len(diffs) == 0:
-                            logger.debug("No differences in board found, skipping")
+                            # logger.debug("No differences in board found, skipping")
                             update_result = ChessbotFrameUpdateResult.NO_CHANGE
                             break
                         move = self._move_heuristics.try_update_board(diffs)
                     except ValueError:
-                        logger.debug(
-                            "Unknown square, assuming obstructed/bad camera angle")
+                        # logger.debug(
+                        #     "Unknown square, assuming obstructed/bad camera angle")
                         update_result = ChessbotFrameUpdateResult.OBSTRUCTED_SQUARES
                     else:
                         if move is not None:
                             break
                         else:
-                            logger.debug(
-                                "Could not find legal move, trying next result")
+                            # logger.debug(
+                            #     "Could not find legal move, trying next result")
                             update_result = ChessbotFrameUpdateResult.ILLEGAL_MOVE
 
-        pgn = self._get_game_pgn_preview()
-        print(pgn)
-        # info = self._engine.analyse(self._board, chess.engine.Limit(time=0.5))
-        # score = info['score']
-        # print(f"{score}")
-        if self._board.outcome() is not None:
-            print(f"{self._board.outcome()}")
+        # pgn = self._get_game_pgn_preview()
+        # print(pgn)
+        # # info = self._engine.analyse(self._board, chess.engine.Limit(time=0.5))
+        # # score = info['score']
+        # # print(f"{score}")
+        # if self._board.outcome() is not None:
+        #     print(f"{self._board.outcome()}")
 
         self._chessboard_preview = self._get_chessboard_preview()
 
