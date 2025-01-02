@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="main starting position white pov" type="PythonConfigurationType" factoryName="Python">
+  <configuration default="false" name="main starting position white pov" type="PythonConfigurationType" factoryName="Python" folderName="on windows">
     <module name="Chessbot" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
